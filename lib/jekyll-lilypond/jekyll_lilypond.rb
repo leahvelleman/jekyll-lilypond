@@ -1,13 +1,26 @@
 module Jekyll
   module Lilypond
     class LilypondTag < Liquid::Block
-      def initialize(_, args, _)
+
+      attr_reader :attributes
+
+      def initialize(_, argtext, _)
         super
+        @attributes = parse_attributes(argtext)
+      end
+
+      def parse_attributes(text)
+        attributes = {}
+        text.scan(Liquid::TagAttributes) do |key, value|
+          value=value.delete_prefix('"').delete_prefix("'")
+          value=value.delete_suffix('"').delete_suffix("'")
+          attributes[key] = value
+        end
+        attributes
       end
 
       def render(context)
         @contents = super
-        @contents
       end
     end
   end

@@ -1,4 +1,4 @@
-require "jekyll-lilypond/jekyll_lilypond"
+require "jekyll-lilypond/jekyll_lilypond.rb"
 
 module Jekyll
   module Lilypond

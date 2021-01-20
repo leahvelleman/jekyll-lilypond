@@ -48,6 +48,14 @@ RSpec.configure do |config|
     # This also used to have :page => page in it
   end
 
+  def make_lilypond_tag_object(optiontext = "", content = "")
+    Jekyll::Lilypond::LilypondTag.parse(
+      "lilypond",
+      optiontext,
+      Tokenizer.new(content + "{% endlilypond %}"),
+      ParseContext.new)
+  end
+
 # The settings below are suggested to provide a good initial experience
 # with RSpec, but feel free to customize to your heart's content.
 =begin
