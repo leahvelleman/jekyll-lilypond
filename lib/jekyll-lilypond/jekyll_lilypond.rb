@@ -1,8 +1,11 @@
+
 module Jekyll
   module Lilypond
     class LilypondTag < Liquid::Block
 
       attr_reader :attributes
+      attr_reader :ly_template
+      attr_reader :ly_source
 
       def initialize(_, argtext, _)
         super
@@ -20,7 +23,30 @@ module Jekyll
       end
 
       def render(context)
-        @contents = super
+        content = super
+        @attributes["content"] = content
+        @layouts = context.registers[:site].layouts
+        @ly_template = load_ly_template
+        @ly_source = Liquid::Template.parse(@ly_template).render(@attributes)
+      end
+
+      private
+
+      def load_ly_template() load_template("ly_template_text", "ly_template") end
+
+      def load_html_template() load_template("html_template_text", "html_template") end
+
+      def load_template(text_key, template_key)
+        text = @attributes[text_key]
+        template = @attributes[template_key]
+        if text then text
+        elsif template then 
+          begin
+            @layouts[template].content
+          rescue NoMethodError
+            raise LoadError.new("No template called #{template}")
+          end
+        else "{{ content }}" end
       end
     end
   end
