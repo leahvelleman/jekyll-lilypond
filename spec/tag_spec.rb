@@ -24,9 +24,9 @@ RSpec.describe(Jekyll::Lilypond::LilypondTag) do
 
   context "rendering" do
     it "loads a lilypond template" do
-      tag = make_lilypond_tag_object(optiontext = "ly_template: test")
+      tag = make_lilypond_tag_object(optiontext = "ly_template: vacuous_ly")
       tag.render(context)
-      expect(tag.ly_template).to eq(site.layouts["test"].content)
+      expect(tag.ly_template).to eq(site.layouts["vacuous_ly"].content)
     end
     it "errors if a bad template filename is given" do
       tag = make_lilypond_tag_object(optiontext = "ly_template: snarfleblorf")
@@ -43,15 +43,15 @@ RSpec.describe(Jekyll::Lilypond::LilypondTag) do
       expect(tag.ly_template).to eq("a {{ content }} b")
     end
     it "renders the template" do
-      tag = make_lilypond_tag_object(optiontext = "ly_template_text: 'a {{ content }} b'",
+      tag = make_lilypond_tag_object(optiontext = "ly_template: vacuous_ly",
                                      content = "c")
       tag.render(context)
-      expect(tag.ly_source).to eq("a c b")
+      expect(tag.ly_source).to eq("c")
     end
     it "uses attributes when rendering" do
-      tag = make_lilypond_tag_object(optiontext = "ly_template_text: '{{ a }} {{ b }}' a:1 b:2")
+      tag = make_lilypond_tag_object(optiontext = "ly_template: variables_ly a:1 b:3", content = "2")
       tag.render(context)
-      expect(tag.ly_source).to eq("1 2")
+      expect(tag.ly_source).to eq("1 2 3")
     end
   end
 end
