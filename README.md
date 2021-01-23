@@ -27,17 +27,20 @@ must have a filename ending in `.html`.
 You can also provide an _input template_ for the lilypond input, ETC ETC. Input templates must have a filename ending in `.ly`, and must
 render to valid lilypond code. 
 
-Input and output templates can access the same attributes. For instance, you could have a `key` attribute that's used by a line like
-this in an input template
+Input and output templates can access the same attributes. For instance, to make the alt text and caption of an image reflect the key it
+is in, you could have a `key` attribute that's used like this in an input template
 
 ```
 \key {{ key }} major {{ content }}
 ```
 
-output template
+and like this in an output template.
 
 ```
-<figcaption>Example in {{ key }} major</figcaption>
+<figure>
+  <img src="{{ filename }}.svg" alt="A piece of music in {{ key }} major">
+  <figcaption>Example in {{ key }} major</figcaption>
+</figure>
 ```
 
 #### Template limitations
