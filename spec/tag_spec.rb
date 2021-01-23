@@ -28,7 +28,7 @@ RSpec.describe(Jekyll::Lilypond::LilypondTag) do
       tag.render(context)
       expect(tag.ly_template).to eq(site.layouts["vacuous_ly"].content)
     end
-    it "errors if a bad template filename is given" do
+    it "errors if a bad lilypond template filename is given" do
       tag = make_lilypond_tag_object(optiontext = "ly_template: snarfleblorf")
       expect { tag.render(context) }.to raise_error(LoadError)
     end
@@ -36,6 +36,10 @@ RSpec.describe(Jekyll::Lilypond::LilypondTag) do
       tag = make_lilypond_tag_object
       tag.render(context)
       expect(tag.ly_template).to eq("{{ content }}")
+    end
+    it "errors if it gets a non-lilypond template instead of a lilypond one" do
+      tag = make_lilypond_tag_object(optiontext = "ly_template: vacuous_html")
+      expect { tag.render(context) }.to raise_error(LoadError)
     end
     it "accepts a raw template if given one" do
       tag = make_lilypond_tag_object(optiontext = "ly_template_text: 'a {{ content }} b'")

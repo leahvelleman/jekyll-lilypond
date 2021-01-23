@@ -32,16 +32,20 @@ module Jekyll
 
       private
 
-      def load_ly_template() load_template("ly_template_text", "ly_template") end
+      def load_ly_template() load_template("ly") end
 
-      def load_html_template() load_template("html_template_text", "html_template") end
+      def load_html_template() load_template("html") end
 
-      def load_template(text_key, template_key)
-        text = @attributes[text_key]
+      def load_template(ext)
+        text_key = ext + "_template_text"
+        template_key = ext + "_template"
+        if @attributes[text_key] then return @attributes[text_key] end
         template = @attributes[template_key]
-        if text then text
-        elsif template then 
+        if template then 
           begin
+            if @layouts[template].ext != ".#{ext}"
+              raise LoadError.new("Template #{template} is not a .#{ext} file")
+            end
             @layouts[template].content
           rescue NoMethodError
             raise LoadError.new("No template called #{template}")
