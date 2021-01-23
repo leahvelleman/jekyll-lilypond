@@ -6,6 +6,8 @@ module Jekyll
       attr_reader :attributes
       attr_reader :ly_template
       attr_reader :ly_source
+      attr_reader :html_template
+      attr_reader :html_source
 
       def initialize(_, argtext, _)
         super
@@ -27,7 +29,9 @@ module Jekyll
         @attributes["content"] = content
         @layouts = context.registers[:site].layouts
         @ly_template = load_ly_template
+        @html_template = load_html_template
         @ly_source = Liquid::Template.parse(@ly_template).render(@attributes)
+        @html_source = Liquid::Template.parse(@html_template).render(@attributes)
       end
 
       private
