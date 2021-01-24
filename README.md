@@ -1,6 +1,32 @@
 # jekyll-lilypond
 
+
+Render snippets of lilypond code by placing them within the `{% lilypond %}...{% endlilypond %}` block. 
+
+For example, use this code to render a scale with alt-text for accessibility.
+
+```
+Here is some music.
+
+{% lilypond alt:'A C-Major scale' %} c d e f g a b c {% endlilypond %}
+```
+
+TODO: The plugin generates a SVG image and includes it in the output page.
+
+## Installation
+
+The plugin requires TK what version of Lilypond TK what version of timidity. 
+
 ## Usage
+
+By default, the tag recognizes these attributes:
+
+* `alt` — TODO: The alt text for the image, defaulting to "A piece of musical notation" if not specified
+* `class` — TODO: The class for the image tag, defaulting to "jekyll-lilypond"
+* `style` — TODO: The style attribute for the image tag, defaulting to empty
+* `mp3` — TODO: Whether to generate an mp3, defaulting to `false`
+
+### New defaults
 
 ### Syntax
 
