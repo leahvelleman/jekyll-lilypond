@@ -1,7 +1,9 @@
-
 module Jekyll
   module Lilypond
     class LilypondTag < Liquid::Block
+
+      DEFAULT_LY_TEMPLATE = "{{ content }}"
+      DEFAULT_MD_TEMPLATE = "![{{ alt }}]({{ filename }}.svg)"
 
       attr_reader :attributes
       attr_reader :ly_template
@@ -36,13 +38,21 @@ module Jekyll
 
       private
 
-      def load_ly_template() load_template("ly") end
+      def load_ly_template
+        load_template("ly_template_text",
+                      "ly_template",
+                      "ly",
+                      DEFAULT_LY_TEMPLATE)
+      end
 
-      def load_html_template() load_template("html") end
+      def load_html_template
+        load_template("html_template_text",
+                      "html_template",
+                      "html",
+                      DEFAULT_MD_TEMPLATE)
+      end
 
-      def load_template(ext)
-        text_key = ext + "_template_text"
-        template_key = ext + "_template"
+      def load_template(text_key, template_key, ext, default)
         if @attributes[text_key] then return @attributes[text_key] end
         template = @attributes[template_key]
         if template then 
@@ -54,7 +64,9 @@ module Jekyll
           rescue NoMethodError
             raise LoadError.new("No template called #{template}")
           end
-        else "{{ content }}" end
+        else
+          default
+        end
       end
     end
   end
