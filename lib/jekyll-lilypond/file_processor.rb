@@ -16,18 +16,18 @@ module Jekyll
         Digest::MD5.hexdigest @source
       end
 
-      def filepath(ext) 
-        "#{@working_dir}/#{filename}.#{ext}"
+      def filepath
+        "#{@working_dir}/#{filename}"
       end
         
       def write
-        File.open(filepath("ly"), "w") do |f|
+        File.open("#{filepath}.ly", "w") do |f|
           f.write(@source)
         end
       end
 
       def compile
-        Kernel.system("lilypond", "--png", filepath("ly"))
+        Kernel.system("lilypond", "--png", "--output=#{filepath}", "#{filepath}.ly")
       end
     end
   end

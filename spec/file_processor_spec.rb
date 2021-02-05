@@ -15,7 +15,9 @@ RSpec.shared_context 'temp_dir' do
 
   let(:source) { '\version "2.14.1" { c d e f g a b c }' }
   let(:hash) { "99cef9f0865c2c21ba7b5b00d1092f61" }
-  let(:filepath) { "#{@temp_dir}/99cef9f0865c2c21ba7b5b00d1092f61.ly" }
+  let(:sourcepath) { "#{@temp_dir}/99cef9f0865c2c21ba7b5b00d1092f61.ly" }
+  let(:pngpath) { "#{@temp_dir}/99cef9f0865c2c21ba7b5b00d1092f61.png" }
+  let(:barepath) { "#{@temp_dir}/99cef9f0865c2c21ba7b5b00d1092f61" }
 end
 
 RSpec.describe(Jekyll::Lilypond::FileProcessor) do
@@ -50,18 +52,19 @@ RSpec.describe(Jekyll::Lilypond::FileProcessor) do
     it "creates a file at the expected location" do
       file_processor = described_class.new(@temp_dir, source)
       file_processor.write
-      expect(File.file?(filepath)).to eq(true)
+      expect(File.file?(sourcepath)).to eq(true)
     end
     it "populates that file with the right source" do
       file_processor = described_class.new(@temp_dir, source)
       file_processor.write
-      expect(File.open(filepath).read).to eq(source)
+      expect(File.open(sourcepath).read).to eq(source)
     end
   end
 
   context "compiling" do
     it "calls lilypond" do
-      expect(Kernel).to receive(:system).with("lilypond", "--png", filepath)
+      expect(Kernel).to receive(:system).with("lilypond", "--png", "--output=#{barepath}", 
+                                              sourcepath)
       file_processor = described_class.new(@temp_dir, source)
       file_processor.write
       file_processor.compile
