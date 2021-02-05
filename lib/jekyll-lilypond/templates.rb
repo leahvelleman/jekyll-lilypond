@@ -6,8 +6,7 @@ module Jekyll
       end
 
       def render(tag)
-        args = tag.attrs.merge("content" => tag.content)
-        @template.render(args)
+        @template.render(tag.attrs)
       end
     end
   end

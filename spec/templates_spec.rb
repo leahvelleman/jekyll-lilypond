@@ -11,12 +11,10 @@ CONTENT
 
 RSpec.describe(Jekyll::Lilypond::Template) do
   let(:tag) {double("Tag", 
-                    content: "text", 
-                    attrs: {"a" => "1", "b" => "2"})
+                    attrs: {"content" => "text", "a" => "1", "b" => "2"})
   }
   let(:long_tag) {double("Tag", 
-                         content: long_content,
-                         attrs: {"a" => "1", "b" => "2"})
+                         attrs: {"content" => long_content, "a" => "1", "b" => "2"})
   }
 
   context "initialization" do
