@@ -1,5 +1,6 @@
 require "jekyll"
-require "jekyll-lilypond/jekyll_lilypond.rb"
+require "jekyll-lilypond/tag.rb"
+require "jekyll-lilypond/file_processor.rb"
 
 module Jekyll
   module Lilypond
