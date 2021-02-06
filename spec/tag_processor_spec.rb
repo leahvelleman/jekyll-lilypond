@@ -96,7 +96,7 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
 
     it "generates a filename as the hash of the source" do
       allow(tp).to receive(:source).and_return(source)
-      expect(tp.filename).to eq(hash)
+      expect(tp.hash).to eq(hash)
     end
     it "provides the filename to the include template" do
       allow(tp).to receive(:source).and_return(source)
@@ -126,7 +126,7 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
                                            "include_template" => "variables_html"}, 
                                       "{ a b c d e }") }
     let(:tp) { described_class.new(site, tag) }
-    let(:target) { source_dir("lilypond_files/#{tp.filename}.png") }
+    let(:target) { source_dir("lilypond_files/#{tp.hash}.png") }
     it "can render a real tag object" do
       expect(tp.source).to eq("{ a b c d e }")
     end

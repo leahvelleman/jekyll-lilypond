@@ -25,39 +25,36 @@ RSpec.describe(Jekyll::Lilypond::FileProcessor) do
 
   context "initialization" do
     it "works if the working dir exists" do
-      expect { described_class.new(@temp_dir, @source) }.not_to raise_error
+      expect { described_class.new(@temp_dir, hash, source) }.not_to raise_error
     end
     it "works even if the working dir is in a deeply nested path" do
       path = "#{@temp_dir}/foo/bar/baz/whatever"
       FileUtils.mkdir_p(path)
-      expect { described_class.new(path, @source) }.not_to raise_error
+      expect { described_class.new(path, hash, source) }.not_to raise_error
     end
     it "errors if the working dir provided doesn't exist" do
-      expect { described_class.new(@temp_dir+"asdfasdf", @source) }.to raise_error(IOError)
-    end
-  end
-
-  context "filename" do
-    it "is equal to the hash of the source" do
-      file_processor = described_class.new(@temp_dir, source)
-      expect(file_processor.filename).to eq(hash)
-    end
-    it "is defined even when the source is empty" do
-      file_processor = described_class.new(@temp_dir, "")
-      expect(file_processor.filename)
+      expect { described_class.new(@temp_dir+"asdfasdf", hash, source) }.to raise_error(IOError)
     end
   end
 
   context "writing" do
     it "creates a file at the expected location" do
-      file_processor = described_class.new(@temp_dir, source)
+      file_processor = described_class.new(@temp_dir, hash, source)
       file_processor.write
       expect(File.file?(sourcepath)).to eq(true)
     end
     it "populates that file with the right source" do
-      file_processor = described_class.new(@temp_dir, source)
+      file_processor = described_class.new(@temp_dir, hash, source)
       file_processor.write
       expect(File.open(sourcepath).read).to eq(source)
+    end
+    it "doesn't overwrite an existing source file with the same name" do
+      File.open(sourcepath, "w") do |f|
+        f.write("This should not be overwritten")
+      end
+      file_processor = described_class.new(@temp_dir, hash, source)
+      file_processor.write
+      expect(File.open(sourcepath).read).to eq("This should not be overwritten")
     end
   end
 
@@ -65,18 +62,20 @@ RSpec.describe(Jekyll::Lilypond::FileProcessor) do
     it "calls lilypond" do
       expect(Kernel).to receive(:system).with("lilypond", "--png", "--output=#{barepath}", 
                                               sourcepath)
-      file_processor = described_class.new(@temp_dir, source)
+      file_processor = described_class.new(@temp_dir, hash, source)
       file_processor.write
       file_processor.compile
     end
   end
 
-  context "expectations from lilypond" do
+  context "integration with lilypond" do
     it "puts output in the target directory even if it's deeply nested" do
-      file_processor = described_class.new(@temp_dir, source)
+      path = "#{@temp_dir}/foo/bar/baz/whatever"
+      FileUtils.mkdir_p(path)
+      file_processor = described_class.new(path, hash, source)
       file_processor.write
       file_processor.compile
-      expect(File.exist?("#{@temp_dir}/#{hash}.png")).to eq(true)
+      expect(File.exist?("#{path}/#{hash}.png")).to eq(true)
     end
   end
   #To do: Error handling

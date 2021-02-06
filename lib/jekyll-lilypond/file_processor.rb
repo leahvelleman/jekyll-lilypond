@@ -3,7 +3,8 @@ require "digest"
 module Jekyll
   module Lilypond
     class FileProcessor
-      def initialize(working_dir, source)
+      def initialize(working_dir, hash, source)
+        @hash = hash
         @source = source
         if Dir.exist? working_dir
           @working_dir = working_dir
@@ -12,17 +13,15 @@ module Jekyll
         end
       end
 
-      def filename
-        Digest::MD5.hexdigest @source
-      end
-
       def filepath
-        "#{@working_dir}/#{filename}"
+        "#{@working_dir}/#{@hash}"
       end
         
       def write
-        File.open("#{filepath}.ly", "w") do |f|
-          f.write(@source)
+        unless File.exist?("#{filepath}.ly")
+          File.open("#{filepath}.ly", "w") do |f|
+            f.write(@source)
+          end
         end
       end
 

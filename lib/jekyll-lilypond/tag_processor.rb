@@ -12,16 +12,16 @@ module Jekyll
         fetch_template(:source).render(@tag.attrs)
       end
 
-      def filename
+      def hash
         Digest::MD5.hexdigest(source)
       end
 
       def include
-        fetch_template(:include).render(@tag.attrs.update("filename" => filename))
+        fetch_template(:include).render(@tag.attrs.update("filename" => hash))
       end
 
       def run! 
-        fp = FileProcessor.new("#{site.source}/lilypond_files", source)
+        fp = FileProcessor.new("#{site.source}/lilypond_files", hash, source)
         fp.write
         fp.compile
       end
