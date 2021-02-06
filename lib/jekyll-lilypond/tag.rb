@@ -1,7 +1,7 @@
 module Jekyll
   module Lilypond
     class Tag
-      attr_accessor :attrs
+      attr_accessor :attrs, :source_template_name, :include_template_name
 
       def initialize(attrs, content)
         @attrs = attrs

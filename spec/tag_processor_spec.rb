@@ -23,10 +23,10 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
     }, overrides))
   end
   let(:site)     { Jekyll::Site.new(config) }
-  let(:contents) { File.read(dest_dir("feed.xml")) }
   let(:context)  { make_context(:site => site) }
-  let(:feed_meta) { Liquid::Template.parse("{% feed_meta %}").render!(context, {}) }
   before(:each) do
+    FileUtils.rm_r Dir.glob(dest_dir("*"))
+    FileUtils.rm_r Dir.glob(source_dir("lilypond_files/*"))
     site.process
   end
 
@@ -116,6 +116,26 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
       expect(fp).to receive(:write)
       expect(fp).to receive(:compile)
       tp.run!
+    end
+  end
+
+  context "integration tests" do
+    let(:tag) { Jekyll::Lilypond::Tag.new({"a" => "1", 
+                                           "b" => "2", 
+                                           "source_template" => "vacuous_ly", 
+                                           "include_template" => "variables_html"}, 
+                                      "{ a b c d e }") }
+    let(:tp) { described_class.new(site, tag) }
+    let(:target) { source_dir("lilypond_files/#{tp.filename}.png") }
+    it "can render a real tag object" do
+      expect(tp.source).to eq("{ a b c d e }")
+    end
+    it "uses variables from a real tag object" do
+      expect(tp.include).to eq("1 { a b c d e } 2")
+    end
+    it "produces a PNG at the expected location in the site source tree" do
+      tp.run!
+      expect(File).to exist(target)
     end
   end
 end

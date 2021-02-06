@@ -21,7 +21,7 @@ module Jekyll
       end
 
       def run! 
-        fp = FileProcessor.new("lilypond_files", source)
+        fp = FileProcessor.new("#{site.source}/lilypond_files", source)
         fp.write
         fp.compile
       end
