@@ -26,8 +26,10 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
   let(:context)  { make_context(:site => site) }
   before(:each) do
     FileUtils.rm_r Dir.glob(dest_dir("*"))
-    FileUtils.rm_r Dir.glob(source_dir("lilypond_files/*"))
     site.process
+  end
+  after(:each) do
+    FileUtils.rm_r Dir.glob(source_dir("lilypond_files/*"))
   end
 
 
