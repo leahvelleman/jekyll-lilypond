@@ -66,6 +66,15 @@ RSpec.describe(Jekyll::Lilypond::FileProcessor) do
       file_processor.write
       file_processor.compile
     end
+    it "doesn't call lilypond if the target png exists" do
+      File.open(pngpath, "w") do |f|
+        f.write("This should not be overwritten")
+      end
+      file_processor = described_class.new(@temp_dir, hash, source)
+      file_processor.write
+      file_processor.compile
+      expect(File.open(pngpath).read).to eq("This should not be overwritten")
+    end
   end
 
   context "integration with lilypond" do
