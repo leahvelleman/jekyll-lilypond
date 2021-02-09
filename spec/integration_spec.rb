@@ -53,23 +53,30 @@ MD
     end
   end
 
-  context "used without attributes" do
+  context "used with the vacuous template" do
     let(:test_page_contents) { 
 <<-MD
 ---
 layout: vacuous_html
 ---
-{% lilypond %}
-c d e f g
+{% lilypond source_template: "vacuous_ly", include_template: "basic_html" %}
+c d e f g a b c
 {% endlilypond %}
 MD
 }
     before(:each) do site.process end
     it "doesn't just emit the tag contents" do
-      expect(File.read(@dest_page)).not_to include("c d e f g")
+      expect(File.read(@dest_page)).not_to include("c d e f g a b c")
     end
-    it "produces a PNG" do
-      expect(File).to exist("#{dest_dir}/lilypond_files/8995d6ab75e6ec4737fdc3c06dce4f56.png")
+    it "produces a PNG in the source tree" do
+      puts Dir.entries"#{@temp_dir}/lilypond_files"
+      expect(File).to exist("#{@temp_dir}/lilypond_files/99cef9f0865c2c21ba7b5b00d1092f61.png")
+    end
+    it "produces a PNG in the destination tree" do
+      expect(File).to exist("#{dest_dir}/lilypond_files/99cef9f0865c2c21ba7b5b00d1092f61.png")
+    end
+    it "produces an image element in the rendered page" do
+      expect(File.read(@dest_page)).to include('<img src="99cef9f0865c2c21ba7b5b00d1092f61.png" />')
     end
   end
 end

@@ -6,6 +6,7 @@ module Jekyll
       def initialize(site, tag)
         @site = site
         @tag = tag
+        puts tag.source_template_name
       end
 
       def source
