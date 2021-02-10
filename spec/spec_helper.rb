@@ -1,3 +1,6 @@
+require 'simplecov'
+SimpleCov.start
+
 require "jekyll"
 require "jekyll-lilypond"
 
@@ -25,35 +28,8 @@ RSpec.configure do |config|
     File.join(DEST_DIR, *files)
   end
 
-  CONFIG_DEFAULTS = {
-    "source"      => source_dir,
-    "destination" => dest_dir,
-    "gems"        => ["jekyll-lilypond"]
-  }.freeze
-
-  def make_page(options = {})
-    page      = Jekyll::Page.new(site, CONFIG_DEFAULTS["source"], "", "page.md")
-    page.data = options
-    page
-  end
-
-  def make_site(options = {})
-    site_config = Jekyll.configuration(CONFIG_DEFAULTS.merge(options))
-    Jekyll::Site.new(site_config)
-  end
-
-  def make_context(registers = {}, environments = {})
-    Liquid::Context.new(environments, {}, 
-      { :site => site }.merge(registers))
-    # This also used to have :page => page in it
-  end
-
-  def make_lilypond_tag_object(optiontext = "", content = "")
-    Jekyll::Lilypond::LilypondTag.parse(
-      "lilypond",
-      optiontext,
-      Tokenizer.new(content + "{% endlilypond %}"),
-      ParseContext.new)
+  def make_context(registers = {})
+    Liquid::Context.new({}, {}, { :site => site }.merge(registers))
   end
 
 # The settings below are suggested to provide a good initial experience
