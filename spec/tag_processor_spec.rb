@@ -4,6 +4,48 @@ require "tmpdir"
 include Liquid
 
 RSpec.describe(Jekyll::Lilypond::TagProcessor) do
+  let(:site) { double("source" => "/some/directory") }
+  let(:tag) { double("Tag", source_details: { :template_name => "NiftyTemplateName" },
+                            include_details: { :template_code => "{{ filename }} abcde" },
+                            attrs: {} ) }
+  let(:subject) { described_class.new(site, tag) }
+
+  context "generating source code" do
+    it "creates a Template using the tag data when you ask for a source template" do
+      expect(Jekyll::Lilypond::Template).to receive(:new).with(site, template_name: "NiftyTemplateName")
+      subject.source_template_obj
+    end
+  end
+
+  context "generating include code" do
+    it "creates a Template using the tag data when you ask for an include template" do
+      expect(Jekyll::Lilypond::Template).to receive(:new).with(site, template_code: "{{ filename }} abcde")
+      subject.include_template_obj
+    end
+  end
+
+  context "generating filename" do
+    let(:source) { "abcde" }
+    let(:hash) { "ab56b4d92b40713acc5af89985d4b786" }
+
+    it "generates a filename as the hash of the source" do
+      allow(subject).to receive(:source).and_return(source)
+      expect(subject.hash).to eq(hash)
+    end
+    it "makes the filename available to the include template" do
+      allow(subject).to receive(:source).and_return(source)
+      expect(subject.include).to eq("#{hash} abcde")
+    end
+    it "provides the filename to the file processor" do
+      allow(subject).to receive(:source).and_return(source)
+      expect(Jekyll::Lilypond::FileProcessor).to \
+        receive(:new).with("/some/directory/lilypond_files", hash, source)
+      subject.file_processor
+    end
+  end
+end
+
+RSpec.describe(Jekyll::Lilypond::TagProcessor) do
   let(:overrides) { {} }
   let(:config) do
     Jekyll.configuration(Jekyll::Utils.deep_merge_hashes({
@@ -32,112 +74,24 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
     FileUtils.rm_r Dir.glob(source_dir("lilypond_files/*"))
   end
 
-
-  context "initialization" do
-    let(:tag) { double("Tag") }
-    it "gets the site object" do
-      tp = described_class.new(site, tag)
-      name = tp.send(:site).source
-      expect(name).to eq(SOURCE_DIR)
-    end
-  end
-
-  context "fetching templates" do
-    let(:tag) { double("Tag") }
-    let(:tp) { described_class.new(site, tag) }
-    let(:template_file) { "vacuous_ly" }
-    let(:template_file_contents) { "{{- content -}}" }
-
-    it "can access the tag's source_template_name property" do
-      expect(tag).to receive(:source_template_name).and_return("foo")
-      expect(tp.template_name(:source)).to eq("foo")
-    end
-    it "can access the tag's include_template_name property" do
-      expect(tag).to receive(:include_template_name).and_return("foo")
-      expect(tp.template_name(:include)).to eq("foo")
-    end
-    it "can look up the content for a template name" do
-      expect(tp.template_content(template_file)).to eq(template_file_contents)
-    end
-    it "fetching a source template returns a Liquid::Template with its contents" do
-      allow(tp).to receive(:template_name).and_return(template_file)
-      expect(Liquid::Template).to receive("parse").with(template_file_contents)
-      tp.fetch_template(:source)
-    end
-    it "fetching an include template returns a Liquid::Template with its contents" do
-      allow(tp).to receive(:template_name).and_return(template_file)
-      expect(Liquid::Template).to receive("parse").with(template_file_contents)
-      tp.fetch_template(:include)
-    end
-  end
-
-  context "generating code" do
-    let(:tag) { double("Tag", attrs: {"a" => "1", "b" => "2", "content" => "text"}) }
-    let(:template) { Liquid::Template.parse("{{a}} {{b}} {{content}}") }
-    let(:rendered_text) { "1 2 text" }
-    let(:tp) { described_class.new(site, tag) }
-
-    it "renders the source template using tag variables" do
-      allow(tp).to receive(:fetch_template).with(:source).and_return(template)
-      expect(tp.source).to eq(rendered_text)
-    end
-    it "renders the include template using tag variables" do
-      allow(tp).to receive(:fetch_template).with(:include).and_return(template)
-      allow(tp).to receive(:fetch_template).with(:source).and_return(template)
-      expect(tp.include).to eq(rendered_text)
-    end
-  end
-
-  context "generating filename" do
-    let(:tag) { double("Tag", attrs: {"a" => "1", "b" => "2", "content" => "text"}) }
-    let(:source) { "abcde" }
-    let(:hash) { "ab56b4d92b40713acc5af89985d4b786" }
-    let(:template) { Liquid::Template.parse("{{filename}} {{content}}") }
-    let(:rendered_text) { "#{hash} text" }
-    let(:tp) { described_class.new(site, tag) }
-
-    it "generates a filename as the hash of the source" do
-      allow(tp).to receive(:source).and_return(source)
-      expect(tp.hash).to eq(hash)
-    end
-    it "provides the filename to the include template" do
-      allow(tp).to receive(:source).and_return(source)
-      allow(tp).to receive(:fetch_template).with(:include).and_return(template)
-      expect(tp.include).to eq(rendered_text)
-    end
-  end
-
-  context "compiling" do
-    let(:tag) { double("Tag", attrs: {"a" => "1", "b" => "2", "content" => "text"}) }
-    let(:tp) { described_class.new(site, tag) }
-    let(:fp) { double("FileProcessor", write: true, compile: true) }
-
-    it "creates and runs a file processor object" do
-      allow(tp).to receive(:source).and_return("")
-      expect(Jekyll::Lilypond::FileProcessor).to receive(:new).and_return(fp)
-      expect(fp).to receive(:write)
-      expect(fp).to receive(:compile)
-      tp.run!
-    end
-  end
-
   context "integration tests" do
-    let(:tag) { Jekyll::Lilypond::Tag.new({"a" => "1", 
-                                           "b" => "2", 
-                                           "source_template" => "vacuous_ly", 
-                                           "include_template" => "variables_html"}, 
-                                      "{ a b c d e }") }
-    let(:tp) { described_class.new(site, tag) }
-    let(:target) { source_dir("lilypond_files/#{tp.hash}.png") }
-    it "can render a real tag object" do
-      expect(tp.source).to eq("{ a b c d e }")
+    let(:code_tag) { Jekyll::Lilypond::Tag.new({ "source_template_code" => '\version "2.20.0" { {{ content }} }',
+                                                 "include_template_code" => '<img src="{{ filename }}.png" />' },
+                                               "a b c d e") }
+    let(:subject) { described_class.new(site, code_tag) }
+    let(:target_hash) { "bfcae429ec31cea750c3ab8167526c7c" }
+    let(:target_include) { '<img src="bfcae429ec31cea750c3ab8167526c7c.png" />' }
+    let(:target_path) { "#{source_dir}/lilypond_files/bfcae429ec31cea750c3ab8167526c7c.png" }
+
+    it "Generates the correct hash from a real tag with explicit code" do
+      expect(subject.hash).to eq(target_hash)
     end
-    it "uses variables from a real tag object" do
-      expect(tp.include).to eq("1 { a b c d e } 2")
+    it "Produces a PNG file at the expected location in the source tree" do
+      subject.run!
+      expect(File).to exist(target_path)
     end
-    it "produces a PNG at the expected location in the site source tree" do
-      tp.run!
-      expect(File).to exist(target)
+    it "Includes the filename in the include code" do
+      expect(subject.include).to eq(target_include)
     end
   end
 end

@@ -6,11 +6,14 @@ module Jekyll
       def initialize(site, tag)
         @site = site
         @tag = tag
-        puts tag.source_template_name
       end
 
       def source
-        fetch_template(:source).render(@tag.attrs)
+        source_template_obj.render(@tag)
+      end
+
+      def source_template_obj
+        Template.new(@site, **@tag.source_details)
       end
 
       def hash
@@ -18,31 +21,21 @@ module Jekyll
       end
 
       def include
-        fetch_template(:include).render(@tag.attrs.update("filename" => hash))
+        @tag.attrs.update("filename" => hash)
+        include_template_obj.render(@tag)
+      end
+
+      def include_template_obj
+        Template.new(@site, **@tag.include_details)
+      end
+
+      def file_processor
+        FileProcessor.new("#{site.source}/lilypond_files", hash, source)
       end
 
       def run! 
-        fp = FileProcessor.new("#{site.source}/lilypond_files", hash, source)
-        fp.write
-        fp.compile
-      end
-
-      def fetch_template(type)
-        name = template_name(type)
-        content = template_content(name)
-        Liquid::Template.parse(content)
-      end
-
-      def template_name(type)
-        if type == :source
-          @tag.source_template_name 
-        elsif type == :include
-          @tag.include_template_name
-        end
-      end
-
-      def template_content(template_name)
-        site.layouts[template_name].content.strip
+        file_processor.write
+        file_processor.compile
       end
     end
   end
