@@ -36,6 +36,10 @@ module Jekyll
       def run! 
         file_processor.write
         file_processor.compile
+        @site.static_files << StaticFile.new(site, 
+                                             site.source, 
+                                             "lilypond_files", 
+                                             "#{hash}.png") 
       end
     end
   end

@@ -23,12 +23,7 @@ module Jekyll
         tag = Tag.new(@attributes, content)
         tp = TagProcessor.new(site, tag)
         tp.run!
-        site.static_files << StaticFile.new(site, 
-                                            site.source, 
-                                            "lilypond_files", 
-                                            "#{tp.hash}.png") 
-
-        tp.include
+        return tp.include
       end
     end
   end
