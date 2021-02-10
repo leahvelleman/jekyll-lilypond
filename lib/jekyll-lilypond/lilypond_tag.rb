@@ -23,7 +23,7 @@ module Jekyll
         tag = Tag.new(@attributes, content)
         tp = TagProcessor.new(site, tag)
         tp.run!
-        return tp.include
+        tp.include
       end
     end
   end

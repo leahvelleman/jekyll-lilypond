@@ -70,16 +70,15 @@ RSpec.describe(Jekyll::Lilypond::Template) do
   end
 
   context "template specified by name" do
-    let(:site) { double("Site", layouts: { "template1" => "{{ content }}a",
-                                           "template2" => "{{ content }}b" }) }
+    let(:layout) { double("Layout", content: "{{ content }}a") }
+    let(:site) { double("Site", layouts: { "template1" => layout }) }
 
     it "loads the template" do
       t = described_class.new(site, template_name:"template1")
-      expect(t.template_code).to eq("{{ content }}a")
+      expect(t.fetch_template_code).to eq("{{ content }}a")
     end
     it "errors when no template by that name exists" do
-      t = described_class.new(site, template_name:"fooblesnarf")
-      expect { t.template_code }.to raise_error(LoadError)
+      expect { described_class.new(site, template_name:"fooblesnarf") }.to raise_error(LoadError)
     end
   end
 end

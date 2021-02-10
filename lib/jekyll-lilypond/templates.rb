@@ -5,25 +5,22 @@ module Jekyll
         @site = site
         @template_code = template_code
         @template_name = template_name
-        @liquid_template_obj = Liquid::Template.parse(template_code)
-      end
-
-      def foo
-        @liquid_template_obj
+        @liquid_template_obj = Liquid::Template.parse(fetch_template_code)
       end
 
       def render(tag)
         @liquid_template_obj.render(tag.attrs)
       end
 
-      def template_code
+      def fetch_template_code
         @template_code || template_by_name
       end
 
       private
       def template_by_name
-        @site.layouts[@template_name] or raise LoadError.new(
+        layout = @site.layouts[@template_name] or raise LoadError.new(
           "No template named #{@template_name} in _layouts/")
+        layout.content.strip
       end
     end
   end
