@@ -12,14 +12,14 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
 
   context "generating source code" do
     it "creates a Template using the tag data when you ask for a source template" do
-      expect(Jekyll::Lilypond::Template).to receive(:new).with(site, template_name: "NiftyTemplateName")
+      expect(Jekyll::Lilypond::Template).to receive(:new).with(site, tag, :source)
       subject.source_template_obj
     end
   end
 
   context "generating include code" do
     it "creates a Template using the tag data when you ask for an include template" do
-      expect(Jekyll::Lilypond::Template).to receive(:new).with(site, template_code: "{{ filename }} abcde")
+      expect(Jekyll::Lilypond::Template).to receive(:new).with(site, tag, :include)
       subject.include_template_obj
     end
   end

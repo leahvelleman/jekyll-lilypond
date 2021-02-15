@@ -12,73 +12,101 @@ thing
 CONTENT
 
 RSpec.describe(Jekyll::Lilypond::Template) do
-  let(:site) { double("Site", layouts: { "template1" => "{{ content }}a",
-                                         "template2" => "{{ content }}b" }) }
+  let(:site) { double("Site", layouts: { "name_a" => layout_a,
+                                         "name_b" => layout_b },
+                              lilypond: double(default_source_template: "name_a",
+                                               default_include_template: "name_c")) } 
+  let(:template_a) { "{{ content }}" }
+  let(:template_b) { "{{ content }}{{ a }}{{ b }}" }
+  let(:template_c) { "{{ content }}{{ a }}{{ b }}{{ c }}{{ d }}" }
+  let(:layout_a) { double(content: template_a) }
+  let(:layout_b) { double(content: template_b) }
+  let(:layout_c) { double(content: template_c) }
 
-  let(:tag) {double("Tag", attrs: {"content" => "text", 
-                                   "a" => "1", 
-                                   "b" => "2"})
-  }
-  let(:long_tag) {double("Tag", attrs: {"content" => long_content, 
-                                        "a" => "1", 
-                                        "b" => "2"})
-  }
-
-  let(:no_variable_template) { "{{ content }}" }
-  let(:variable_template) { "{{ content }}{{ a }}{{ b }}" }
-
-  context "literal template code" do
-    it "creates a Liquid template" do 
-      expect(Liquid::Template).to receive(:parse).with(no_variable_template)
-      described_class.new(site, template_code:no_variable_template)
-    end
-
-    context "with no variables" do 
-      subject { described_class.new(site, template_code:no_variable_template) }
-      it "accesses the content attribute" do
-        expect(subject.render(tag)).to eq("text")
+  context "when fetching templates" do
+    context "literal template code" do
+      let(:tag) { double("Tag", 
+                         attrs: {},
+                         source_details: { template_code: template_a },
+                         include_details: { template_code: template_b }) }
+      it "is used verbatim for source" do
+        subject = described_class.new(site, tag, :source)
+        expect(subject.fetch_template_code).to eq(template_a)
       end
-      it "handles multiline content" do
-        expect(subject.render(long_tag)).to eq(long_content)
+      it "is used verbatim for includes" do
+        subject = described_class.new(site, tag, :include)
+        expect(subject.fetch_template_code).to eq(template_b)
       end
     end
-
-    context "with variables" do 
-      subject { described_class.new(site, template_code:variable_template) }
-      it "accesses the content attribute" do
-        expect(subject.render(tag)).to eq("text12")
+    context "a valid template name" do
+      let(:tag) { double("Tag", 
+                         attrs: {},
+                         source_details: { template_name: "name_a" },
+                         include_details: { template_name: "name_b" }) }
+      it "loads the corresponding source template" do
+        subject = described_class.new(site, tag, :source)
+        expect(subject.fetch_template_code).to eq(template_a)
       end
-      it "handles missing variables" do
-        expect(subject.render(double("Tag", attrs: {"content" => "foo"}))).to eq("foo")
-      end
-      it "handles multiline content" do
-        expect(subject.render(long_tag)).to eq("#{long_content}12")
+      it "loads the corresponding include template" do
+        subject = described_class.new(site, tag, :include)
+        expect(subject.fetch_template_code).to eq(template_b)
       end
     end
+    context "an invalid template name" do
+      let(:tag) { double("Tag",
+                         attrs: {},
+                         source_details: { template_name: "i_do_not_exist" },
+                         include_details: { template_name: "me_neither" }) }
+      it "raises an error when it's a source template name" do
+        subject = described_class.new(site, tag, :source)
+        expect { subject.fetch_template_code }.to raise_exception(LoadError)
+      end
+      it "raises an error when it's an include template name" do
+        subject = described_class.new(site, tag, :include)
+        expect { subject.fetch_template_code }.to raise_exception(LoadError)
+      end
+    end
+    context "a totally unspecified template" do
+      let(:tag) { double("Tag",
+                         attrs: {},
+                         source_details: {},
+                         include_details: {}) }
 
-    context "html-like template" do
-      let(:html_ready_tag) { double("Tag",
-                                       attrs: {"filename" => "r3y90rqyq3894yrw84rwq43",
-                                               "class" => "foo"}) }
-      let(:html_template) { "<img src='{{ filename }}.png' class='score {{ class }}' />" }
-      let(:output) {"<img src='r3y90rqyq3894yrw84rwq43.png' class='score foo' />"}
-      subject { described_class.new(site, template_code:html_template) }
-      it "renders correctly" do
-        expect(subject.render(html_ready_tag)).to eq(output)
+      it "gets a site default template" do
+        subject = described_class.new(site, tag, :source)
+        expect(subject.fetch_template_code).to eq(template_a)
+      end
+      it "raises an error if the site default points to a nonexistant template" do
+        subject = described_class.new(site, tag, :include)
+        expect { subject.fetch_template_code }.to raise_error(LoadError)
       end
     end
   end
 
-  context "template specified by name" do
-    let(:layout) { double("Layout", content: "{{ content }}a") }
-    let(:site) { double("Site", layouts: { "template1" => layout }) }
-
-    it "loads the template" do
-      t = described_class.new(site, template_name:"template1")
-      expect(t.fetch_template_code).to eq("{{ content }}a")
+  context "rendering" do
+    let(:tag) { double("Tag", 
+                       attrs: {"content" => "text",
+                               "a" => "1",
+                               "b" => "2"},
+                       source_details: { template_code: template_a },
+                       include_details: { template_code: template_b }) }
+    let(:long_tag) { double("Tag", 
+                       attrs: {"content" => long_content,
+                               "a" => "1",
+                               "b" => "2"},
+                       source_details: { template_code: template_a },
+                       include_details: { template_code: template_b }) }
+    it "renders a template without variables" do
+      subject = described_class.new(site, tag, :source)
+      expect(subject.render(tag)).to eq("text")
     end
-    it "errors when no template by that name exists" do
-      expect { described_class.new(site, template_name:"fooblesnarf") }.to raise_error(LoadError)
+    it "renders a template with variables" do
+      subject = described_class.new(site, tag, :include)
+      expect(subject.render(tag)).to eq("text12")
+    end
+    it "handles multiline content" do
+      subject = described_class.new(site, long_tag, :include)
+      expect(subject.render(long_tag)).to eq("#{long_content}12")
     end
   end
 end
