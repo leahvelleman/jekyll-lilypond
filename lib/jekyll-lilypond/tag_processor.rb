@@ -13,7 +13,7 @@ module Jekyll
       end
 
       def source_template_obj
-        Template.new(@site, **@tag.source_details)
+        Template.new(@site, @tag, :source)
       end
 
       def hash
@@ -26,7 +26,7 @@ module Jekyll
       end
 
       def include_template_obj
-        Template.new(@site, **@tag.include_details)
+        Template.new(@site, @tag, :include)
       end
 
       def file_processor
