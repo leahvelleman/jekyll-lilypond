@@ -69,9 +69,11 @@ These affect the appearance rendered HTML.
 |`style` | Style attribute | empty |
 |`caption` | Figure caption | empty |
 
-In addition, you can determine how much structure Jekyll puts around the image tag. `template: basic`
-produces only an image with the specified class, style, and alt-text. (Note that this prevents the `mp3` and `caption` 
-attributes from working.) `template: regular` adds a `figure` element, a figure caption, and a button to play an mp3.
+In addition, you can determine how much structure Jekyll puts around the image. By default,
+the plugin wraps the image in a `figure` tag, displays a caption if you provide one, and creates
+a button to play the mp3 if you ask it to generate one. To remove these extra tags and just
+create a bare `img` element, specify `template: basic`. (If you do this, the `mp3`, `tempo`, 
+and `caption` attributes have no effect.)
 
 
 ### Choosing a font
