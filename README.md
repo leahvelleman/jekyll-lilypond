@@ -60,18 +60,29 @@ Change settings using tag attributes, including the `alt` and `mp3` attributes w
 * `lyricsize` — TODO: The font size of lyrics, in Lilypond's idiosyncratic units: `2` is large, `1` is normal, `0` small, `-1` very small, and so on.
 * `width` — TODO: The width of the score, in ????. The default value, `nil`, instructs Lilypond to typeset everything on one line, making it as wide as it needs to be.
 
-If you specify a lyric font, it may be useful to choose a narrow one, so that wordy passages don't have their spacing distorted. 
-Times is fairly narrow, and the free font Brill and the nonfree Minion Pro Condensed are both attractive options that are narrower still.
+### Choosing a font
 
-## Advanced usage
+If you find that horizontal spacing is uneven in passages with lyrics, the solution is often to choose a narrower lyric font, so that long words don't
+cause note spacing to "bulge" as much. Times is fairly narrow, and the free font Brill and the nonfree Minion Pro Condensed are both attractive options 
+that are narrower still.
+
+The font you choose must be installed locally. 
 
 ### Templates
 
-TK layouts
+When the plugin places an image on the page, it can add additional HTML structure. You can control how much structure it adds. 
 
-* `basic` — TODO: Only an `img` tag with the specified alt-text, class, and style. The `caption` attribute has no effect in this layout. 
-* `regular` (default) — TODO: A `figure` tag containing the image and a caption if one is specified. If `mp3` is `true`, there is also a button to play the generated mp3.
-* `fancy` — TODO: IUNNO WHATEVER GO NUTS
+* `template: basic` — TODO: Only an `img` tag with the specified alt-text, class, and style. The `caption` and `mp3` attributes have no effect in this layout. 
+* `template: regular` (default) — TODO: A `figure` tag containing the image and a caption if one is specified. If `mp3` is `true`, there is also a button to play the generated mp3.
+* `template: fancy` — TODO: IUNNO WHATEVER GO NUTS
+
+You can also write your own templates: see Template Authoring. 
+
+## Advanced usage
+
+Behind the scenes, the plugin uses 
+
+
 
 You can write your own layout. TO CHECK Put it in your site `_includes` directory, and specify it by filename. For instance, if your template file
 is `_includes/extra_fancy.html`, your opening tag should be `{% lilypond template: extra_fancy %}`. In your template file, refer to the generated image, 
@@ -80,7 +91,7 @@ MIDI file, and mp3 as `{{ filename }}.png`, `{{ filename }}.midi`, and `{{ filen
 Any attribute you pass to the tag is available for use in a template, not just the officially supported ones. For instance, if your opening tag is
 `{% lilypond foo: bar %}` and your template contains `<img src="{{ filename }}.png"/> {{ foo }}`, it will produce an image element followed by the word "bar".
 
-### Input templates
+### Lilypond templates
 
 If you are an advanced Lilypond user, you can also write an *input template* for the source file that is passed to Lilypond. 
 
@@ -90,8 +101,7 @@ could result in a broken link unless you write your own `\midi` block in your in
 
 ### Raw mode
 
-The plugin uses these attributes to generate a Lilypond source file. If you want to bypass that process and write the entire Lilypond source file 
-from scratch, use the `raw` attribute.
+
 
 * `raw` — TODO: Whether to discard the built-in Lilypond template, defaulting to `false`
 
