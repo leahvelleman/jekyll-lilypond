@@ -46,9 +46,9 @@ than music expressions — for instance, if you want access to the `\paper`
 or `\layout` blocks — use the `raw` attribute or write an input template.)
 
 
-### Attributes
+### Settings
 
-There are a number of attributes available. 
+Change settings using tag attributes, including the `alt` and `mp3` attributes we've already seen.
 
 * `alt` — TODO: The alt text for the image, defaulting to "A piece of musical notation" if not specified
 * `class` — TODO: The class attribute for the image tag, defaulting to "jekyll-lilypond"
@@ -60,8 +60,10 @@ There are a number of attributes available.
 * `lyricsize` — TODO: The font size of lyrics, in Lilypond's idiosyncratic units: `2` is large, `1` is normal, `0` small, `-1` very small, and so on.
 * `width` — TODO: The width of the score, in ????. The default value, `nil`, instructs Lilypond to typeset everything on one line, making it as wide as it needs to be.
 
-It may be useful to choose a narrow lyric font, so that wordy passages don't have their spacing distorted. Times is fairly narrow, and the free font Brill and 
-the nonfree Minion Pro Condensed are both attractive options that are narrower still.
+If you specify a lyric font, it may be useful to choose a narrow one, so that wordy passages don't have their spacing distorted. 
+Times is fairly narrow, and the free font Brill and the nonfree Minion Pro Condensed are both attractive options that are narrower still.
+
+## Advanced usage
 
 ### Templates
 
@@ -85,6 +87,17 @@ If you are an advanced Lilypond user, you can also write an *input template* for
 As with regular templates, if you do this, any attribute you pass to the tag will become available to your input template. On the other hand,
 most "official" attributes will stop working unless you reimplement them. For instance, mp3 generation depends on MIDI output, so `mp3: true` 
 could result in a broken link unless you write your own `\midi` block in your input template. 
+
+### Raw mode
+
+The plugin uses these attributes to generate a Lilypond source file. If you want to bypass that process and write the entire Lilypond source file 
+from scratch, use the `raw` attribute.
+
+* `raw` — TODO: Whether to discard the built-in Lilypond template, defaulting to `false`
+
+If you do this, you're on your own: all attributes except `alt`, `class`, `style`, and `caption` will stop working, and
+you will instead need to specify font, size, and so on using your own Lilypond code that you write. 
+
 
 ## Testing
 
