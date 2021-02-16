@@ -48,7 +48,9 @@ or `\layout` blocks — use the `raw` attribute or write an input template.)
 
 ### Settings
 
-Change settings using tag attributes, including the `alt` and `mp3` attributes we've already seen.
+Change settings using tag attributes, including the `alt` and `mp3` attributes we've already seen. 
+
+These attributes affect the HTML output.
 
 | Attribute | Purpose | Default |
 |---|---|---|
@@ -57,17 +59,15 @@ Change settings using tag attributes, including the `alt` and `mp3` attributes w
 |`style` | Style attribute | empty |
 |`caption` | Figure caption | empty |
 
+These affect the formatting of the music itself. 
 
-
-* `alt` — TODO: The alt text for the image, defaulting to "A piece of musical notation" if not specified
-* `class` — TODO: The class attribute for the image tag, defaulting to "jekyll-lilypond"
-* `style` — TODO: The style attribute for the image tag, defaulting to empty
-* `caption` — TODO:
-* `mp3` — TODO: Whether to generate an mp3, defaulting to `false`
-* `tempo` — TODO: Tempo of generated mp3, where a value of `120` means ♩=120
-* `lyricfont` — TODO: The font to use for typesetting lyrics, defaulting to Lilypond's Century Schoolbook-like default
-* `lyricsize` — TODO: The font size of lyrics, in Lilypond's idiosyncratic units: `2` is large, `1` is normal, `0` small, `-1` very small, and so on.
-* `width` — TODO: The width of the score, in ????. The default value, `nil`, instructs Lilypond to typeset everything on one line, making it as wide as it needs to be.
+| Attribute | Purpose | Default |
+|---|---|---|
+|`mp3` | Whether to generate an mp3 | `false` |
+|`tempo` | Tempo of mp3 if one is generated, in quarter notes per minute | `120` |
+|`lyricfont` | Lyric font | Century Schoolbook |
+|`lyricsize` | Lyric size, in Lilypond's internal units | `1` |
+|`width` | Width of score | `nil`, which produces no line breaks |
 
 ### Choosing a font
 
