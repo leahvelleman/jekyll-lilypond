@@ -50,16 +50,7 @@ or `\layout` blocks — use the `raw` attribute or write an input template.)
 
 Change settings using tag attributes, including the `alt` and `mp3` attributes we've already seen. 
 
-These attributes affect the HTML output.
-
-| Attribute | Purpose | Default |
-|---|---|---|
-|`alt` | Alt text | `"A piece of musical notation"` |
-|`class` | Class attribute | `"jekyll-lilypond"` |
-|`style` | Style attribute | empty |
-|`caption` | Figure caption | empty |
-
-These affect the formatting of the music itself. 
+These affect Lilypond's musical output. 
 
 | Attribute | Purpose | Default |
 |---|---|---|
@@ -69,6 +60,28 @@ These affect the formatting of the music itself.
 |`lyricsize` | Lyric size, in Lilypond's internal units | `1` |
 |`width` | Width of score | `nil`, which produces no line breaks |
 
+These affect the appearance rendered HTML.
+
+| Attribute | Purpose | Default |
+|---|---|---|
+|`alt` | Alt text | `"A piece of musical notation"` |
+|`class` | Class attribute | `"jekyll-lilypond"` |
+|`style` | Style attribute | empty |
+|`caption` | Figure caption | empty |
+
+In addition, you can determine how much structure Jekyll puts around the image tag. `template: basic`
+produces this:
+```
+<img src="filename.png" alt="alt text" class="class" style="style" />
+```
+Note that this prevents the `mp3` and `caption` attributes from working.
+
+`template: regular` wraps the image in a `figure` element with a caption, and provides a button
+to play the mp3 if one is generated.
+
+`template: fancy` foo bar baz.
+
+
 ### Choosing a font
 
 If you find that horizontal spacing is uneven in passages with lyrics, the solution is often to choose a narrower lyric font, so that long words don't
@@ -76,16 +89,6 @@ cause note spacing to "bulge" as much. Times is fairly narrow, and the free font
 that are narrower still.
 
 The font you choose must be installed locally. 
-
-### Templates
-
-When the plugin places an image on the page, it can add additional HTML structure. You can control how much structure it adds. 
-
-* `template: basic` — TODO: Only an `img` tag with the specified alt-text, class, and style. The `caption` and `mp3` attributes have no effect in this layout. 
-* `template: regular` (default) — TODO: A `figure` tag containing the image and a caption if one is specified. If `mp3` is `true`, there is also a button to play the generated mp3.
-* `template: fancy` — TODO: IUNNO WHATEVER GO NUTS
-
-You can also write your own templates: see Template Authoring. 
 
 ## Advanced usage
 
