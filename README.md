@@ -50,7 +50,7 @@ or `\layout` blocks — use the `raw` attribute or write an input template.)
 
 Change settings using tag attributes, including the `alt` and `mp3` attributes we've already seen. 
 
-These affect Lilypond's musical output. 
+These attributes affect Lilypond's musical output. 
 
 | Attribute | Purpose | Default |
 |---|---|---|
@@ -58,9 +58,11 @@ These affect Lilypond's musical output.
 |`tempo` | Tempo of mp3 if one is generated, in quarter notes per minute | `120` |
 |`lyricfont` | Lyric font | Century Schoolbook |
 |`lyricsize` | Lyric size, in Lilypond's internal units | `1` |
-|`width` | Width of score | `nil`, which produces no line breaks |
+|`width` | Width of score | `nil` |
 
-These affect the appearance rendered HTML.
+The default width of `nil` produces a score of unlimited width, with no linebreaks. 
+
+These affect the HTML elements inserted into your finished document. 
 
 | Attribute | Purpose | Default |
 |---|---|---|
@@ -69,11 +71,11 @@ These affect the appearance rendered HTML.
 |`style` | Style attribute | empty |
 |`caption` | Figure caption | empty |
 
-In addition, you can determine how much structure Jekyll puts around the image. By default,
-the plugin wraps the image in a `figure` tag, displays a caption if you provide one, and creates
-a button to play the mp3 if you ask it to generate one. To remove these extra tags and just
-create a bare `img` element, specify `template: basic`. (If you do this, the `mp3`, `tempo`, 
-and `caption` attributes have no effect.)
+Finally, you can control whether the plugin inserts a `figure` element with extra 
+controls or just a bare `img` element. The default is a `figure`. If you generate an mp3, 
+it includes a button to play it, and if you specify a caption, it displays it as a
+`figurecaption` element. To remove these extras and just insert a bare `img`, specify
+`template: bare`. 
 
 
 ### Choosing a font
