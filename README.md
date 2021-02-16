@@ -50,6 +50,15 @@ or `\layout` blocks — use the `raw` attribute or write an input template.)
 
 Change settings using tag attributes, including the `alt` and `mp3` attributes we've already seen.
 
+| Attribute | Purpose | Default |
+|---|---|---|
+|`alt` | Alt text | `"A piece of musical notation"` |
+|`class` | Class attribute | `"jekyll-lilypond"` |
+|`style` | Style attribute | empty |
+|`caption` | Figure caption | empty |
+
+
+
 * `alt` — TODO: The alt text for the image, defaulting to "A piece of musical notation" if not specified
 * `class` — TODO: The class attribute for the image tag, defaulting to "jekyll-lilypond"
 * `style` — TODO: The style attribute for the image tag, defaulting to empty
