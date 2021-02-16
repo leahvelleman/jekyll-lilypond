@@ -22,9 +22,15 @@ The plugin requires TK what version of Lilypond TK what version of timidity.
 By default, the tag recognizes these attributes:
 
 * `alt` — TODO: The alt text for the image, defaulting to "A piece of musical notation" if not specified
-* `class` — TODO: The class for the image tag, defaulting to "jekyll-lilypond"
+* `class` — TODO: The class attribute for the image tag, defaulting to "jekyll-lilypond"
 * `style` — TODO: The style attribute for the image tag, defaulting to empty
 * `mp3` — TODO: Whether to generate an mp3, defaulting to `false`
+* `tempo` — TODO: Tempo of generated mp3, where a value of `120` means ♩=120
+* `lyricfont` — TODO: The font to use for typesetting lyrics, defaulting to Lilypond's Century Schoolbook-like default
+* `lyricsize` — TODO: The font size of lyrics, in Lilypond's idiosyncratic units: `2` is large, `1` is normal, `0` small, `-1` very small, and so on.
+
+It may be useful to choose a narrow lyric font, so that wordy passages don't have their spacing distorted. Times is fairly narrow, and the free font Brill and 
+the nonfree Minion Pro Condensed are both attractive options that are narrower still.
 
 ### New defaults
 
