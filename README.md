@@ -19,35 +19,30 @@ The plugin requires TK what version of Lilypond TK what version of timidity.
 
 ## Usage
 
-The block expects its contents to be lilypond code, and it compiles that code to produce an image, which it 
-inserts into the rendered page. TODO If you use the `mp3` attribute, it also generates an mp3 file and inserts
-a link to it.
-
-The contents of the block must be Lilypond music expressions. TODO The block inserts a version statement, a `\paper` and
-`\layout` block, and other niceties, so that simple examples like this work without errors.
+Inside the block, write a Lilypond music expression, which can be simple 
 ```
 {% lilypond alt: "Five notes of the A-minor scale" %}
   a b c d e 
 {% endlilypond %}
 ```
-As do more complex music expressions.
+or complex.
 ```
 {% lilypond alt: "A deceptive cadence" %}
   TODO MORE COMPLICATED EXAMPLE
 {% endlilypond %}
 ```
-TODO To write your own Lilypond file fromt scratch — for instance, if you want to write
-your own `\header`, `\paper`, or `\layout` blocks — use the `raw` attribute. 
+For advanced Lilypond users, see Advanced use.
+
+To generate an mp3 file as well as an image, use `mp3: true`.
+```
+{% lilypond alt: "SOMETHING", mp3: true %}
+  TODO
+{% endlilypond %}
+```
 
 ### Attributes
 
-Use attributes in the Lilypond tag to affect the rendered image, the mp3
-if one is generated, and the HTML that contains them. For instance, 
-this code TODO DOES SOMETHING
-
-TODO
-
-These attributes are recognized by default.
+There are a number of attributes available. 
 
 * `alt` — TODO: The alt text for the image, defaulting to "A piece of musical notation" if not specified
 * `class` — TODO: The class attribute for the image tag, defaulting to "jekyll-lilypond"
