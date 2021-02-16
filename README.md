@@ -19,6 +19,8 @@ The plugin requires TK what version of Lilypond TK what version of timidity.
 
 ## Usage
 
+### Writing music
+
 Inside the block, write a Lilypond music expression, which can be simple 
 ```
 {% lilypond alt: "Five notes of the A-minor scale" %}
@@ -31,7 +33,6 @@ or complex.
   TODO MORE COMPLICATED EXAMPLE
 {% endlilypond %}
 ```
-For advanced Lilypond users, see Advanced use.
 
 To generate an mp3 file as well as an image, use `mp3: true`.
 ```
@@ -39,6 +40,11 @@ To generate an mp3 file as well as an image, use `mp3: true`.
   TODO
 {% endlilypond %}
 ```
+
+(If you are an advanced Lilypond user and you need to write code other
+than music expressions — for instance, if you want access to the `\paper`
+or `\layout` blocks — use the `raw` attribute or write an input template.)
+
 
 ### Attributes
 
