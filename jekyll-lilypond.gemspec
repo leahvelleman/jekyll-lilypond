@@ -4,6 +4,8 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "jekyll-lilypond/version"
 
 Gem::Specification.new do |spec|
+  spec.version = "0.1"
+  spec.authors = "Leah Velleman"
   spec.name = "jekyll-lilypond"
   spec.summary = "Lilypond music snippets in Jekyll"
   spec.require_paths = ["lib"]
