@@ -27,7 +27,8 @@ module Jekyll
 
       def compile
         unless File.exist?("#{filepath}.png")
-          Kernel.system("lilypond", "--png", "--output=#{filepath}", "#{filepath}.ly")
+          Kernel.system("lilypond", "--ps", "--output=#{filepath}", "#{filepath}.ly")
+          Kernel.system("convert", "-trim", "-density", "384", "-resize", "25%", "#{filepath}.ps",  "#{filepath}.png")
         end
       end
     end
