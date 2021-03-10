@@ -1,26 +1,41 @@
 module Jekyll
   module Lilypond
     class Template
-      def initialize(site, template_code:nil, template_name:nil)
+      def initialize(site, tag, type)
         @site = site
-        @template_code = template_code
-        @template_name = template_name
-        @liquid_template_obj = Liquid::Template.parse(fetch_template_code)
+        @type = type
+        if @type == :source
+          @template_code = tag.source_details[:template_code]
+          @template_name = tag.source_details[:template_name]
+        elsif @type == :include
+          @template_code = tag.include_details[:template_code]
+          @template_name = tag.include_details[:template_name]
+        end
       end
 
       def render(tag)
-        @liquid_template_obj.render(tag.attrs)
+        Liquid::Template.parse(fetch_template_code).render(tag.attrs)
       end
 
       def fetch_template_code
-        @template_code || template_by_name
+        @template_code || template_by_name(@template_name) || template_by_name(default_template)
       end
 
       private
-      def template_by_name
-        layout = @site.layouts[@template_name] or raise LoadError.new(
-          "No template named #{@template_name} in _layouts/")
-        layout.content.strip
+      def template_by_name(n)
+        if n
+          layout = @site.layouts[n] or raise LoadError.new(
+            "No template named #{n} in _layouts/")
+          layout.content.strip
+        end
+      end
+
+      def default_template
+        if @type == :source
+          @site.lilypond.default_source_template
+        elsif @type == :include
+          @site.lilypond.default_include_template
+        end
       end
     end
   end
