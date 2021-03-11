@@ -60,8 +60,8 @@ RSpec.describe(Jekyll::Lilypond::FileProcessor) do
 
   context "compiling" do
     it "calls lilypond" do
-      expect(Kernel).to receive(:system).with("lilypond", "--png", "--output=#{barepath}", 
-                                              sourcepath)
+      expect(Kernel).to receive(:system).with("lilypond", any_args, "--output=#{barepath}", sourcepath)
+      expect(Kernel).to receive(:system).with("convert", any_args)
       file_processor = described_class.new(@temp_dir, hash, source)
       file_processor.write
       file_processor.compile
