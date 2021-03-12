@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = "Leah Velleman"
   spec.name = "jekyll-lilypond"
   spec.summary = "Lilypond music snippets in Jekyll"
+  spec.license = "MIT"
   spec.require_paths = ["lib"]
   spec.add_dependency "jekyll", ">= 3.0", "< 5.0"
   spec.add_development_dependency "rspec", "~> 3.5"
