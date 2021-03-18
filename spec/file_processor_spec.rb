@@ -32,9 +32,6 @@ RSpec.describe(Jekyll::Lilypond::FileProcessor) do
       FileUtils.mkdir_p(path)
       expect { described_class.new(path, hash, source) }.not_to raise_error
     end
-    it "errors if the working dir provided doesn't exist" do
-      expect { described_class.new(@temp_dir+"asdfasdf", hash, source) }.to raise_error(IOError)
-    end
   end
 
   context "writing" do
@@ -55,6 +52,14 @@ RSpec.describe(Jekyll::Lilypond::FileProcessor) do
       file_processor = described_class.new(@temp_dir, hash, source)
       file_processor.write
       expect(File.open(sourcepath).read).to eq("This should not be overwritten")
+    end
+    it "creates the working directory if it does not exist" do
+      path = "#{@temp_dir}/foo/bar/baz/whatever"
+      expect { 
+        fp = described_class.new(path, hash, source) 
+        fp.write
+      }.not_to raise_error
+      expect(File.exists?(path)).to eq(true)
     end
   end
 

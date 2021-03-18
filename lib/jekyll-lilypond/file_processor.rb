@@ -6,11 +6,7 @@ module Jekyll
       def initialize(working_dir, hash, source)
         @hash = hash
         @source = source
-        if Dir.exist? working_dir
-          @working_dir = working_dir
-        else
-          raise IOError.new("Specified working directory #{working_dir} does not exist")
-        end
+        @working_dir = working_dir
       end
 
       def filepath
@@ -18,6 +14,9 @@ module Jekyll
       end
         
       def write
+        unless File.directory?(@working_dir)
+          FileUtils.mkdir_p(@working_dir)
+        end
         unless File.exist?("#{filepath}.ly")
           File.open("#{filepath}.ly", "w") do |f|
             f.write(@source)
@@ -28,7 +27,7 @@ module Jekyll
       def compile
         unless File.exist?("#{filepath}.png")
           Kernel.system("lilypond", "-lERROR", "-dbackend=svg", "--output=#{filepath}", "#{filepath}.ly")
-          Kernel.system("convert", "-strip", "-trim", "-density", "384", "-resize", "25%", "#{filepath}.svg",  "#{filepath}.png")
+          Kernel.system("convert", "-strip", "-trim", "-density", "404", "-resize", "25%", "#{filepath}.svg",  "#{filepath}.png")
         end
       end
     end
