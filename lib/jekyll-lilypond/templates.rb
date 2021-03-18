@@ -24,9 +24,13 @@ module Jekyll
       private
       def template_by_name(n)
         if n
-          layout = @site.layouts[n] or raise LoadError.new(
-            "No template named #{n} in _layouts/")
-          layout.content.strip
+          if @site.layouts[n]
+            @site.layouts[n].content.strip
+          elsif plugin_layouts[n]
+            plugin_layouts[n].strip
+          else
+            raise LoadError.new("No template named #{n} in _layouts/")
+          end
         end
       end
 
@@ -36,6 +40,10 @@ module Jekyll
         elsif @type == :include
           @site.lilypond.default_include_template
         end
+      end
+
+      def plugin_layouts
+        { "empty" => "{{ content }}" }
       end
     end
   end

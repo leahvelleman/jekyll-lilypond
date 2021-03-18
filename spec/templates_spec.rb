@@ -52,6 +52,37 @@ RSpec.describe(Jekyll::Lilypond::Template) do
         expect(subject.fetch_template_code).to eq(template_b)
       end
     end
+    context "a template name that the plugin defines but the site doesn't" do
+      let(:tag) { double("Tag",
+                         attrs: {},
+                         source_details: { template_name: "empty" },
+                         include_details: { template_name: "empty" }) }
+      it "loads the corresponding plugin source template" do
+        subject = described_class.new(site, tag, :source)
+        expect(subject.fetch_template_code).to eq("{{ content }}")
+      end
+      it "loads the corresponding plugin include template" do
+        subject = described_class.new(site, tag, :include)
+        expect(subject.fetch_template_code).to eq("{{ content }}")
+      end
+    end
+    context "a template name that the plugin and the site define" do
+      let(:differentsite) { double("Site", layouts: { "empty" => layout_a }) }
+      let(:tag) { double("Tag",
+                         attrs: {},
+                         source_details: { template_name: "empty" },
+                         include_details: { template_name: "empty" }) }
+      it "gives the site version of the source template precedence" do
+        subject = described_class.new(differentsite, tag, :source)
+        expect(subject.fetch_template_code).to eq(template_a)
+      end
+      it "gives the site version of the include template precedence" do
+        subject = described_class.new(differentsite, tag, :include)
+        expect(subject.fetch_template_code).to eq(template_a)
+      end
+
+                         
+    end
     context "an invalid template name" do
       let(:tag) { double("Tag",
                          attrs: {},
