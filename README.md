@@ -11,40 +11,36 @@ Here is some music.
 {% lilypond alt:'A C-Major scale' %} c d e f g a b c {% endlilypond %}
 ```
 
-TODO: The plugin generates a SVG image and includes it in the output page.
+The plugin generates a PNG image and includes it in the output page.
 
 ## Installation
 
-The plugin requires TK what version of Lilypond TK what version of timidity. 
+The plugin requires Lilypond and ImageMagick. To use it in a Jekyll site,
+add 
+
+```ruby
+gem 'jekyll-lilypond'
+```
+
+to your Gemfile and
+
+```yaml
+plugins:
+  - jekyll-lilypond
+```
+
+to your `_config.yml`.
 
 ## Usage
 
 ### Writing music
 
-Inside the block, write a Lilypond music expression, which can be simple 
+Inside the block, write a Lilypond music expression.
 ```
 {% lilypond alt: "Five notes of the A-minor scale" %}
   a b c d e 
 {% endlilypond %}
 ```
-or complex.
-```
-{% lilypond alt: "A deceptive cadence" %}
-  TODO MORE COMPLICATED EXAMPLE
-{% endlilypond %}
-```
-
-To generate an mp3 file as well as an image, use `mp3: true`.
-```
-{% lilypond alt: "SOMETHING", mp3: true %}
-  TODO
-{% endlilypond %}
-```
-
-(If you are an advanced Lilypond user and you need to write code other
-than music expressions — for instance, if you want access to the `\paper`
-or `\layout` blocks — use the `raw` attribute or write an input template.)
-
 
 ### Settings
 
@@ -54,11 +50,10 @@ These attributes affect Lilypond's musical output.
 
 | Attribute | Purpose | Default |
 |---|---|---|
-|`mp3` | Whether to generate an mp3 | `false` |
-|`tempo` | Tempo of mp3 if one is generated, in quarter notes per minute | `120` |
 |`lyricfont` | Lyric font | Century Schoolbook |
 |`lyricsize` | Lyric size, in Lilypond's internal units | `1` |
 |`width` | Width of score | `nil` |
+|`height` | Height of score | `nil` |
 
 The default width of `nil` produces a score of unlimited width, with no linebreaks. 
 
@@ -71,12 +66,8 @@ These affect the HTML elements inserted into your finished document.
 |`style` | Style attribute | empty |
 |`caption` | Figure caption | empty |
 
-Finally, you can control whether the plugin inserts a `figure` element with extra 
-controls or just a bare `img` element. The default is a `figure`. If you generate an mp3, 
-it includes a button to play it, and if you specify a caption, it displays it as a
-`figurecaption` element. To remove these extras and just insert a bare `img`, specify
-`template: bare`. 
-
+Finally, you can control whether the plugin inserts a `figure` element or just a bare `img` element. The default is an `img`. Specify `include_template: figure`
+for a `figure`. The `caption` attribute only has an effect on `figure` elements.
 
 ### Choosing a font
 
@@ -85,37 +76,6 @@ cause note spacing to "bulge" as much. Times is fairly narrow, and the free font
 that are narrower still.
 
 The font you choose must be installed locally. 
-
-## Advanced usage
-
-Behind the scenes, the plugin uses 
-
-
-
-You can write your own layout. TO CHECK Put it in your site `_includes` directory, and specify it by filename. For instance, if your template file
-is `_includes/extra_fancy.html`, your opening tag should be `{% lilypond template: extra_fancy %}`. In your template file, refer to the generated image, 
-MIDI file, and mp3 as `{{ filename }}.png`, `{{ filename }}.midi`, and `{{ filename }}.mp3`.
-
-Any attribute you pass to the tag is available for use in a template, not just the officially supported ones. For instance, if your opening tag is
-`{% lilypond foo: bar %}` and your template contains `<img src="{{ filename }}.png"/> {{ foo }}`, it will produce an image element followed by the word "bar".
-
-### Lilypond templates
-
-If you are an advanced Lilypond user, you can also write an *input template* for the source file that is passed to Lilypond. 
-
-As with regular templates, if you do this, any attribute you pass to the tag will become available to your input template. On the other hand,
-most "official" attributes will stop working unless you reimplement them. For instance, mp3 generation depends on MIDI output, so `mp3: true` 
-could result in a broken link unless you write your own `\midi` block in your input template. 
-
-### Raw mode
-
-
-
-* `raw` — TODO: Whether to discard the built-in Lilypond template, defaulting to `false`
-
-If you do this, you're on your own: all attributes except `alt`, `class`, `style`, and `caption` will stop working, and
-you will instead need to specify font, size, and so on using your own Lilypond code that you write. 
-
 
 ## Testing
 
