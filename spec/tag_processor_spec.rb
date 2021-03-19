@@ -5,9 +5,9 @@ include Liquid
 
 RSpec.describe(Jekyll::Lilypond::TagProcessor) do
   let(:site) { double("source" => "/some/directory") }
-  let(:tag) { double("Tag", source_details: { :template_name => "NiftyTemplateName" },
-                            include_details: { :template_code => "{{ filename }} abcde" },
-                            attrs: {} ) }
+  let(:tag) { double("Tag", template_names: { source: "NiftyTemplateName", include: nil},
+                            template_code: { source: nil, include: "{{ filename }} abcde" },
+                            attrs: {}) }
   let(:subject) { described_class.new(site, tag) }
 
   context "generating source code" do

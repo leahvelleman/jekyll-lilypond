@@ -1,0 +1,18 @@
+<figure>
+  <img src="lilypond_files/{{ filename }}.png"
+    {%- if style %}
+      style="{{ style }}"
+    {% endif -%}
+    {%- if class %}
+      class="{{ class }}"
+    {% endif -%}
+    {%- if alt %}
+      alt="{{ alt }}"
+      title="{{ alt }}"
+    {% endif -%}
+    />
+{%- if caption %}
+  <figcaption>{{ caption }}</figcaption>
+{% endif -%}
+</figure>
+
