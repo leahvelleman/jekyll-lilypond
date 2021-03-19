@@ -40,7 +40,7 @@ Inside the block, write a Lilypond music expression.
 {% endlilypond %}
 ```
 The expression can include multiple staves, expressive marks, time and key signature changes, and any of the other notation Lilypond supports within a music
-expression
+expression. For details, see [this brief summary](https://lilypond.org/doc/v2.20/Documentation/learning/score-is-a-_0028single_0029-compound-musical-expression) in the Lilypond teaching manual or [Wikipedia's list of common music expression details](https://en.wikipedia.org/wiki/Help:Score#Syntax).
 ```
 {% lilypond %}
   \new PianoStaff <<
