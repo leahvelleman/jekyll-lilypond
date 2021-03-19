@@ -45,7 +45,7 @@ expression
 {% lilypond %}
   \new PianoStaff <<
     \new Staff { \time 2/4 \key ees \major
-      \tempo "siempre stacatto"
+      \tempo "siempre staccato"
       <g bes des' ees'>
       8 8 8 8 8 8 8 8 8 8_> 8 8_> 8 8 8 8
     }
