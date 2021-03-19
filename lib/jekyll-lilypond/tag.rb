@@ -1,15 +1,15 @@
 module Jekyll
   module Lilypond
     class Tag
-      attr_accessor :attrs, :source_details, :include_details
+      attr_accessor :attrs, :template_names, :template_code
 
       def initialize(attrs, content)
         @attrs = attrs
-        @attrs ["content"] = content
-        @source_details = { template_name: @attrs.delete("source_template"), 
-                            template_code: @attrs.delete("source_template_code") }
-        @include_details = { template_name: @attrs.delete("include_template"),
-                             template_code: @attrs.delete("include_template_code") }
+        @attrs["content"] = content
+        @template_names = { source: @attrs.delete("source_template"),
+                            include: @attrs.delete("include_template") }
+        @template_code = { source: @attrs.delete("source_template_code"),
+                           include: @attrs.delete("include_template_code") }
       end
     end
   end
