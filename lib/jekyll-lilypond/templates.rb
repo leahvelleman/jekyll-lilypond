@@ -43,7 +43,9 @@ module Jekyll
       end
 
       def plugin_layouts
-        { "empty" => "{{ content }}" }
+        { "empty" => File.read(File.join(File.dirname(__dir__), "/jekyll-lilypond/templates/empty.ly")),
+          "basic" => File.read(File.join(File.dirname(__dir__), "/jekyll-lilypond/templates/basic.ly"))
+        }
       end
     end
   end
