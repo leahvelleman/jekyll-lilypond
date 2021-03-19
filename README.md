@@ -44,7 +44,7 @@ Inside the block, write a Lilypond music expression.
 
 ### Settings
 
-Change settings using tag attributes, including the `alt` and `mp3` attributes we've already seen. 
+Change settings using tag attributes, including the `alt` attribute we've already seen. 
 
 These attributes affect Lilypond's musical output. 
 
