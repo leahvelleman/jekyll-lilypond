@@ -31,9 +31,7 @@ plugins:
 
 to your `_config.yml`.
 
-## Usage
-
-### Writing music
+## Quick start
 
 Inside the block, write a Lilypond music expression.
 ```
@@ -41,6 +39,24 @@ Inside the block, write a Lilypond music expression.
   a b c d e 
 {% endlilypond %}
 ```
+The expression can include multiple staves, expressive marks, time and key signature changes, and any of the other notation Lilypond supports within a music
+expression
+```
+{% lilypond %}
+  \new PianoStaff <<
+    \new Staff { \time 2/4 \key ees \major
+      \tempo "siempre stacatto"
+      <g bes des' ees'>
+      8 8 8 8 8 8 8 8 8 8_> 8 8_> 8 8 8 8
+    }
+    \new Staff { \clef bass \time 2/4 \key ees \major
+      <fes,, aes,, ces, fes, >
+      8 8 8 8 8 8 8 8 8 8_> 8 8_> 8 8 8 8
+    }
+  >>
+{% endlilypond %}
+```
+
 
 ### Settings
 
