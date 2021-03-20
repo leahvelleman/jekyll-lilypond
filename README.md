@@ -3,8 +3,8 @@
 ![Source code for the first measure of Rite of Spring and the image output for the same measure](files/rite.png)
 
 Automatically generate sheet music images by adding Lilypond blocks to your markdown files. Customize the images
-and the HTML markup surrounding them using Liquid attributes, such as `alt: "The first measure of Rite of Spring"` in
-this example. 
+and the HTML markup surrounding them using Liquid attributes — for instance, by using the `alt` attribute to
+specify alt text.
 
 For complete documentation, see [the plugin website](https://www.velleman.org/jekyll-lilypond).
 
@@ -53,41 +53,8 @@ expression. For details, see [this brief summary](https://lilypond.org/doc/v2.20
 {% endlilypond %}
 ```
 
-
-### Settings
-
-Change settings using tag attributes, including the `alt` attribute we've already seen. 
-
-These attributes affect Lilypond's musical output. 
-
-| Attribute | Purpose | Default |
-|---|---|---|
-|`lyricfont` | Lyric font | Century Schoolbook |
-|`lyricsize` | Lyric size, in Lilypond's internal units | `1` |
-|`width` | Width of score | `nil` |
-|`height` | Height of score | `nil` |
-
-The default width of `nil` produces a score of unlimited width, with no linebreaks. 
-
-These affect the HTML elements inserted into your finished document. 
-
-| Attribute | Purpose | Default |
-|---|---|---|
-|`alt` | Alt text | `"A piece of musical notation"` |
-|`class` | Class attribute | `"jekyll-lilypond"` |
-|`style` | Style attribute | empty |
-|`caption` | Figure caption | empty |
-
-Finally, you can control whether the plugin inserts a `figure` element or just a bare `img` element. The default is an `img`. Specify `include_template: figure`
-for a `figure`. The `caption` attribute only has an effect on `figure` elements.
-
-### Choosing a font
-
-If you find that horizontal spacing is uneven in passages with lyrics, the solution is often to choose a narrower lyric font, so that long words don't
-cause note spacing to "bulge" as much. Times is fairly narrow, and the free font Brill and the nonfree Minion Pro Condensed are both attractive options 
-that are narrower still.
-
-The font you choose must be installed locally. 
+To make customizations that can't be make within a music expression — for instance, to change the width or height of the score or specify a custom font —
+use attributes on the `{% lilypond %}` tag. For more information on attributes, see [the plugin documentation](http://127.0.0.1:4000/jekyll-lilypond#attributes).
 
 ## Testing
 
