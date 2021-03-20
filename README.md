@@ -2,7 +2,12 @@
 
 ![Source code for the first measure of Rite of Spring and the image output for the same measure](files/rite.png)
 
-Automatically generate sheet music snippets by adding Lilypond code blocks to your markdown files.
+Automatically generate sheet music images by adding Lilypond blocks to your markdown files. Customize the images
+and the HTML markup surrounding them using Liquid attributes, such as `alt: "The first measure of Rite of Spring"` in
+this example. 
+
+For complete documentation, see [the plugin website](https://www.velleman.org/jekyll-lilypond).
+
 
 ## Installation
 
@@ -33,7 +38,7 @@ Inside the block, write a Lilypond music expression.
 The expression can include multiple staves, expressive marks, time and key signature changes, and any of the other notation Lilypond supports within a music
 expression. For details, see [this brief summary](https://lilypond.org/doc/v2.20/Documentation/learning/score-is-a-_0028single_0029-compound-musical-expression) in the Lilypond teaching manual or [Wikipedia's list of common music expression details](https://en.wikipedia.org/wiki/Help:Score#Syntax).
 ```
-{% lilypond %}
+{% lilypond alt: "The beginning of the second movement" %}
   \new PianoStaff <<
     \new Staff { \time 2/4 \key ees \major
       \tempo "siempre staccato"
