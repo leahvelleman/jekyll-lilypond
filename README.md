@@ -1,17 +1,8 @@
 # jekyll-lilypond
 
+![Source code for the first measure of Rite of Spring and the image output for the same measure](files/rite.png)
 
 Render snippets of lilypond code by placing them within the `{% lilypond %}...{% endlilypond %}` block. 
-
-For example, use this code to render a scale with alt-text for accessibility.
-
-```
-Here is some music.
-
-{% lilypond alt:'A C-Major scale' %} c d e f g a b c {% endlilypond %}
-```
-
-The plugin generates a PNG image and includes it in the output page.
 
 ## Installation
 
