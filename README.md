@@ -2,7 +2,7 @@
 
 ![Source code for the first measure of Rite of Spring and the image output for the same measure](files/rite.png)
 
-Render snippets of lilypond code by placing them within the `{% lilypond %}...{% endlilypond %}` block. 
+Automatically generate sheet music snippets by adding Lilypond code blocks to your markdown files.
 
 ## Installation
 
