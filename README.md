@@ -1,6 +1,6 @@
 # jekyll-lilypond
 
-<img alt="Source code for the first measure of Rite of Spring and the image output for the same measure" src="files/rite.png" width=75%"/>
+<img src="files/rite.png" width="75%"/>
 
 Automatically generate sheet music images by adding Lilypond blocks to your markdown files. Customize the images
 and the HTML markup surrounding them using Liquid attributes — for instance, by using the `alt` attribute to
