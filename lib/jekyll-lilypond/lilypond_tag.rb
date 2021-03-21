@@ -13,6 +13,7 @@ module Jekyll
           value=value.delete_suffix('"').delete_suffix("'")
           attributes[key] = value
         end
+        attributes["attr_text"] = text
         attributes
       end
 
