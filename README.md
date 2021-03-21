@@ -1,7 +1,9 @@
 # jekyll-lilypond
 
-<img src="files/rite.png" width="75%" style="margin: 1em auto !important;"/>
-
+<p align="center">
+<img src="files/rite.png" width="75%"/>
+</p>
+                                      
 Automatically generate sheet music images by adding Lilypond blocks to your markdown files. Customize the images
 and the HTML markup surrounding them using Liquid attributes — for instance, by using the `alt` attribute to
 specify alt text.
@@ -77,7 +79,8 @@ and contain the `img` element and surrounding markup.
 To generate both kinds of source code, it uses Liquid templates. Liquid is the native templating language of Jekyll. Just as Jekyll users can write their own
 templates to create new page layouts, users of this plugin can write their own templates to add simple features and customizations.
 
-In Lilypond source, using a template avoids the need to repeat boilerplate. For instance, the default Lilypond template begins like this:
+As well as allowing customization, using a template to generate Lilypond source avoids the need to repeat boilerplate. For instance, the default Lilypond
+template begins like this:
 ```
 \version "2.20.0"
 \paper {
@@ -88,13 +91,22 @@ In Lilypond source, using a template avoids the need to repeat boilerplate. For 
   evenHeaderMarkup = ##f
   oddFooterMarkup = ##f
   evenFooterMarkup = ##f
+  ...
+}
 ```
 These settings produce clean output without extraneous marks, headers, footers, or whitespace, but it would be a hassle to retype them in every Lilypond block.
 Later parts of the template include correct code for setting the page width, font, and so on, which saves the user from needing to remember the somewhat 
 arbitrary syntax for doing those things.
 
-In HTML includes, using templates makes it possible to customize markup. For instance, one built-in template inserts a bare image into the finished page,
-another wraps it in a `figure` element and provides a caption, and so on. 
+### Future plans
+
+The next thing on my agenda is to generate assets other than images. For instance, Lilypond can generate MIDI files and software synthesizers can generate
+mp3 audio from MIDI. It would be nice to support those — and, beyond that, to support other workflows that users might think of. (Maybe someone will want to 
+generate video? Or do musical analysis on MIDI files?)
+
+The most flexible way to do all this would be to let users specify workflow steps in a sitewide Rakefile, alongside whatever other deployment and
+asset-processing tasks they may have specified there. Templates could then specify what sorts of generated files they require, and the plugin could call on
+Rake to generate those that don't exist. 
 
 ## Testing
 
