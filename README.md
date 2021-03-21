@@ -56,6 +56,46 @@ expression. For details, see [this brief summary](https://lilypond.org/doc/v2.20
 To make customizations that can't be make within a music expression — for instance, to change the width or height of the score or specify a custom font —
 use attributes on the `{% lilypond %}` tag. For more information on attributes, see [the plugin documentation](http://127.0.0.1:4000/jekyll-lilypond#attributes).
 
+## Approach
+
+### Caching
+
+Lilypond runs more slowly than Jekyll, and regenerating every score would create a noticeable lag. This would be especially painful in auto-regenerate mode,
+which is normally very responsive. To solve this, I cache images. Each Lilypond source file, and each resulting image, has a filename derived from the MD5 hash
+of the source code. The plugin only compiles a Lilypond source file when the corresponding image does not yet exist. 
+
+To force the plugin to regenerate all of the score images for a site, which is sometimes useful for debugging, empty the `lilypond_files` directory. 
+
+To keep upload size to a minimum, you can also empty the `lilypond_files` directory and regenerate the site before deploying. This removes "stale" images 
+that are no longer in use.
+
+### Templates
+
+The plugin generates two kinds of code: Lilypond source files, which it uses to generate images, and HTML includes, which appear in the finished page
+and contain the `img` element and surrounding markup. 
+
+To generate both kinds of source code, it uses Liquid templates. Liquid is the native templating language of Jekyll. Just as Jekyll users can write their own
+templates to create new page layouts, users of this plugin can write their own templates to add simple features and customizations.
+
+In Lilypond source, using a template avoids the need to repeat boilerplate. For instance, the default Lilypond template begins like this:
+```
+\version "2.20.0"
+\paper {
+  indent = 0\mm
+  short-indent = 0\mm
+  bottom-margin = 4\mm
+  oddHeaderMarkup = ##f
+  evenHeaderMarkup = ##f
+  oddFooterMarkup = ##f
+  evenFooterMarkup = ##f
+```
+These settings produce clean output without extraneous marks, headers, footers, or whitespace, but it would be a hassle to retype them in every Lilypond block.
+Later parts of the template include correct code for setting the page width, font, and so on, which saves the user from needing to remember the somewhat 
+arbitrary syntax for doing those things.
+
+In HTML includes, using templates makes it possible to customize markup. For instance, one built-in template inserts a bare image into the finished page,
+another wraps it in a `figure` element and provides a caption, and so on. 
+
 ## Testing
 
 `bundle exec rspec` runs tests. A minimal sample Jekyll site for tests to call on is in `spec/fixtures`, 
