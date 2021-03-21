@@ -4,9 +4,8 @@
 <img src="files/rite.png" width="75%"/>
 </p>
                                       
-Automatically generate sheet music images by adding Lilypond blocks to your markdown files. Customize the images
-and the HTML markup surrounding them using Liquid attributes — for instance, by using the `alt` attribute to
-specify alt text.
+Automatically generate sheet music images by adding Lilypond blocks to your markdown files. Customize their
+appearance using Liquid attributes. The plugin caches the images it generates, making auto-regeneration fast.
 
 For complete documentation, see [the plugin website](https://www.velleman.org/jekyll-lilypond).
 
