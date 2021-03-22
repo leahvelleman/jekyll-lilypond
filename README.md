@@ -38,21 +38,6 @@ Inside the block, write a Lilypond music expression.
 ```
 The expression can include multiple staves, expressive marks, time and key signature changes, and any of the other notation Lilypond supports within a music
 expression. For details, see [this brief summary](https://lilypond.org/doc/v2.20/Documentation/learning/score-is-a-_0028single_0029-compound-musical-expression) in the Lilypond teaching manual or [Wikipedia's list of common music expression details](https://en.wikipedia.org/wiki/Help:Score#Syntax).
-```
-{% lilypond alt: "The beginning of the second movement" %}
-  \new PianoStaff <<
-    \new Staff { \time 2/4 \key ees \major
-      \tempo "siempre staccato"
-      <g bes des' ees'>
-      8 8 8 8 8 8 8 8 8 8_> 8 8_> 8 8 8 8
-    }
-    \new Staff { \clef bass \time 2/4 \key ees \major
-      <fes,, aes,, ces, fes, >
-      8 8 8 8 8 8 8 8 8 8_> 8 8_> 8 8 8 8
-    }
-  >>
-{% endlilypond %}
-```
 
 To make customizations that can't be make within a music expression — for instance, to change the width or height of the score or specify a custom font —
 use attributes on the `{% lilypond %}` tag. For more information on attributes, see [the plugin documentation](http://127.0.0.1:4000/jekyll-lilypond#attributes).
