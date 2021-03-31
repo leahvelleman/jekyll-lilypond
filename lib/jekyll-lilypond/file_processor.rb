@@ -26,9 +26,41 @@ module Jekyll
 
       def compile
         unless File.exist?("#{filepath}.svg")
-          puts "L"
-          Kernel.system("lilypond", "-lERROR", "-dbackend=svg", "--output=#{filepath}", "#{filepath}.ly")
-          Kernel.system("inkscape", "#{filepath}.svg", "--export-area-drawing", "--export-type=svg", "--export-filename=#{filepath}.svg")
+          puts "Compiling Lilypond file."
+          Kernel.system("lilypond", "-lERROR", 
+                        "-dbackend=svg", 
+                        "--output=#{filepath}", 
+                        "#{filepath}.ly")
+        end
+      end
+
+      def trim_svg
+        if File.exist?("#{filepath}.svg")
+          Kernel.system("inkscape", 
+                        "#{filepath}.svg", 
+                        "--export-area-drawing", 
+                        "--export-type=svg", 
+                        "--export-filename=#{filepath}.svg")
+        else
+          raise RuntimeError.new(
+            "Cannot trim SVG: expected SVG file #{filepath}.svg does not exist")
+        end
+      end
+
+      def make_mp3
+        unless File.exist?("#{filepath}.mp3")
+          if File.exist?("#{filepath}.midi")
+            puts "Generating mp3."
+            Kernel.system("timidity", 
+                          "#{filepath}.midi", 
+                          "-Ow", 
+                          "-o", 
+                          "#{filepath}.mp3",
+                         [:out, :err] => File::NULL)
+          else
+            raise RuntimeError.new(
+              "Cannot generate mp3: expected MIDI file #{filepath}.midi does not exist.")
+          end
         end
       end
     end
