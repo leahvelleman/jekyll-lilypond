@@ -24,6 +24,7 @@
 \score {
   { {{ content }} }
   \layout { 
+    #(layout-set-staff-size 17)
     \context {
       \Lyrics
       {% if lyricfont %}
