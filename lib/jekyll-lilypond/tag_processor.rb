@@ -34,8 +34,10 @@ module Jekyll
       end
 
       def run! 
-        file_processor.write
-        file_processor.compile
+        fp = file_processor
+        fp.write
+        fp.compile
+        fp.trim_svg if @tag.attrs["trim"] == "true"
         @site.static_files << StaticFile.new(site, 
                                              site.source, 
                                              "lilypond_files", 

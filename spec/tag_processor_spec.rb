@@ -4,7 +4,7 @@ require "tmpdir"
 include Liquid
 
 RSpec.describe(Jekyll::Lilypond::TagProcessor) do
-  let(:site) { double("source" => "/some/directory") }
+  let(:site) { double("source" => "/some/directory", "static_files" => []) }
   let(:tag) { double("Tag", template_names: { source: "NiftyTemplateName", include: nil},
                             template_code: { source: nil, include: "{{ filename }} abcde" },
                             attrs: {}) }
@@ -41,6 +41,40 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
       expect(Jekyll::Lilypond::FileProcessor).to \
         receive(:new).with("/some/directory/lilypond_files", hash, source)
       subject.file_processor
+    end
+  end
+
+  context "running" do
+    let(:source) { "abcde" }
+    let(:hash) { "ab56b4d92b40713acc5af89985d4b786" }
+    before do
+      allow(subject).to receive(:source).and_return(source)
+      allow_any_instance_of(Jekyll::Lilypond::FileProcessor).to receive(:write)
+      allow_any_instance_of(Jekyll::Lilypond::FileProcessor).to receive(:compile)
+      allow_any_instance_of(Jekyll::Lilypond::FileProcessor).to receive(:trim_svg)
+    end
+
+    it "calls write" do
+      expect_any_instance_of(Jekyll::Lilypond::FileProcessor).to receive(:write)
+      subject.run!
+    end
+    it "calls compile" do
+      expect_any_instance_of(Jekyll::Lilypond::FileProcessor).to receive(:compile)
+      subject.run!
+    end
+    it "doesn't call trim_svg by default" do
+      expect_any_instance_of(Jekyll::Lilypond::FileProcessor).not_to receive(:trim_svg)
+      subject.run!
+    end
+
+    it "calls trim_svg if the tag asks it to" do
+      trimmable_tag = double("Tag", template_names: { source: "NiftyTemplateName", include: nil},
+                            template_code: { source: nil, include: "{{ filename }} abcde" },
+                            attrs: { "trim" => "true" })
+      subject = described_class.new(site, trimmable_tag)
+      allow(subject).to receive(:source).and_return(source)
+      expect_any_instance_of(Jekyll::Lilypond::FileProcessor).to receive(:trim_svg)
+      subject.run!
     end
   end
 end
