@@ -1,8 +1,14 @@
 # jekyll-lilypond
 
-![Source code for the first measure of Rite of Spring and the image output for the same measure](files/rite.png)
+<p align="center">
+<img src="files/rite.png" width="75%"/>
+</p>
+                                      
+Automatically generate sheet music images by adding Lilypond blocks to your markdown files. Customize their
+appearance using Liquid attributes. The plugin caches the images it generates, making auto-regeneration fast.
 
-Render snippets of lilypond code by placing them within the `{% lilypond %}...{% endlilypond %}` block. 
+For complete documentation, see [the plugin website](https://www.velleman.org/jekyll-lilypond).
+
 
 ## Installation
 
@@ -32,57 +38,59 @@ Inside the block, write a Lilypond music expression.
 ```
 The expression can include multiple staves, expressive marks, time and key signature changes, and any of the other notation Lilypond supports within a music
 expression. For details, see [this brief summary](https://lilypond.org/doc/v2.20/Documentation/learning/score-is-a-_0028single_0029-compound-musical-expression) in the Lilypond teaching manual or [Wikipedia's list of common music expression details](https://en.wikipedia.org/wiki/Help:Score#Syntax).
+
+To make customizations that can't be make within a music expression — for instance, to change the width or height of the score or specify a custom font —
+use attributes on the `{% lilypond %}` tag. For more information on attributes, see [the plugin documentation](http://127.0.0.1:4000/jekyll-lilypond#attributes).
+
+## Approach
+
+### Caching
+
+Lilypond runs more slowly than Jekyll, and regenerating every score would create a noticeable lag. This would be especially painful in auto-regenerate mode,
+which is normally very responsive. To solve this, I cache images. Each Lilypond source file, and each resulting image, has a filename derived from the MD5 hash
+of the source code. The plugin only compiles a Lilypond source file when the corresponding image does not yet exist. 
+
+To force the plugin to regenerate all of the score images for a site, which is sometimes useful for debugging, empty the `lilypond_files` directory. 
+
+To keep upload size to a minimum, you can also empty the `lilypond_files` directory and regenerate the site before deploying. This removes "stale" images 
+that are no longer in use.
+
+### Templates
+
+The plugin generates two kinds of code: Lilypond source files, which it uses to generate images, and HTML includes, which appear in the finished page
+and contain the `img` element and surrounding markup. 
+
+To generate both kinds of source code, it uses Liquid templates. Liquid is the native templating language of Jekyll. Just as Jekyll users can write their own
+templates to create new page layouts, users of this plugin can write their own templates to add simple features and customizations.
+
+As well as allowing customization, using a template to generate Lilypond source avoids the need to repeat boilerplate. For instance, the default Lilypond
+template begins like this:
 ```
-{% lilypond %}
-  \new PianoStaff <<
-    \new Staff { \time 2/4 \key ees \major
-      \tempo "siempre staccato"
-      <g bes des' ees'>
-      8 8 8 8 8 8 8 8 8 8_> 8 8_> 8 8 8 8
-    }
-    \new Staff { \clef bass \time 2/4 \key ees \major
-      <fes,, aes,, ces, fes, >
-      8 8 8 8 8 8 8 8 8 8_> 8 8_> 8 8 8 8
-    }
-  >>
-{% endlilypond %}
+\version "2.20.0"
+\paper {
+  indent = 0\mm
+  short-indent = 0\mm
+  bottom-margin = 4\mm
+  oddHeaderMarkup = ##f
+  evenHeaderMarkup = ##f
+  oddFooterMarkup = ##f
+  evenFooterMarkup = ##f
+  ...
+}
 ```
+These settings produce clean output without extraneous marks, headers, footers, or whitespace, but it would be a hassle to retype them in every Lilypond block.
+Later parts of the template include correct code for setting the page width, font, and so on, which saves the user from needing to remember the somewhat 
+arbitrary syntax for doing those things.
 
+### Future plans
 
-### Settings
+The next thing on my agenda is to generate assets other than images. For instance, Lilypond can generate MIDI files and software synthesizers can generate
+mp3 audio from MIDI. It would be nice to support those — and, beyond that, to support other workflows that users might think of. (Maybe someone will want to 
+generate video? Or do musical analysis on MIDI files?)
 
-Change settings using tag attributes, including the `alt` attribute we've already seen. 
-
-These attributes affect Lilypond's musical output. 
-
-| Attribute | Purpose | Default |
-|---|---|---|
-|`lyricfont` | Lyric font | Century Schoolbook |
-|`lyricsize` | Lyric size, in Lilypond's internal units | `1` |
-|`width` | Width of score | `nil` |
-|`height` | Height of score | `nil` |
-
-The default width of `nil` produces a score of unlimited width, with no linebreaks. 
-
-These affect the HTML elements inserted into your finished document. 
-
-| Attribute | Purpose | Default |
-|---|---|---|
-|`alt` | Alt text | `"A piece of musical notation"` |
-|`class` | Class attribute | `"jekyll-lilypond"` |
-|`style` | Style attribute | empty |
-|`caption` | Figure caption | empty |
-
-Finally, you can control whether the plugin inserts a `figure` element or just a bare `img` element. The default is an `img`. Specify `include_template: figure`
-for a `figure`. The `caption` attribute only has an effect on `figure` elements.
-
-### Choosing a font
-
-If you find that horizontal spacing is uneven in passages with lyrics, the solution is often to choose a narrower lyric font, so that long words don't
-cause note spacing to "bulge" as much. Times is fairly narrow, and the free font Brill and the nonfree Minion Pro Condensed are both attractive options 
-that are narrower still.
-
-The font you choose must be installed locally. 
+The most flexible way to do all this would be to let users specify workflow steps in a sitewide Rakefile, alongside whatever other deployment and
+asset-processing tasks they may have specified there. Templates could then specify what sorts of generated files they require, and the plugin could call on
+Rake to generate those that don't exist. 
 
 ## Testing
 
