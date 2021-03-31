@@ -12,7 +12,7 @@ For complete documentation, see [the plugin website](https://www.velleman.org/je
 
 ## Installation
 
-The plugin requires Lilypond and ImageMagick. To use it in a Jekyll site,
+The plugin requires Lilypond and Inkscape. To use it in a Jekyll site,
 add 
 
 ```ruby

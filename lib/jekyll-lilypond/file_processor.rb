@@ -25,9 +25,10 @@ module Jekyll
       end
 
       def compile
-        unless File.exist?("#{filepath}.png")
+        unless File.exist?("#{filepath}.svg")
+          puts "L"
           Kernel.system("lilypond", "-lERROR", "-dbackend=svg", "--output=#{filepath}", "#{filepath}.ly")
-          Kernel.system("convert", "-strip", "-trim", "-density", "404", "-resize", "25%", "#{filepath}.svg",  "#{filepath}.png")
+          Kernel.system("inkscape", "#{filepath}.svg", "--export-area-drawing", "--export-type=svg", "--export-filename=#{filepath}.svg")
         end
       end
     end

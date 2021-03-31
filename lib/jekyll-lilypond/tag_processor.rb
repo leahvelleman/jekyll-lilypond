@@ -39,7 +39,7 @@ module Jekyll
         @site.static_files << StaticFile.new(site, 
                                              site.source, 
                                              "lilypond_files", 
-                                             "#{hash}.png") 
+                                             "#{hash}.svg") 
       end
     end
   end
