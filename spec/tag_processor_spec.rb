@@ -76,17 +76,17 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
 
   context "integration tests" do
     let(:code_tag) { Jekyll::Lilypond::Tag.new({ "source_template_code" => '\version "2.20.0" { {{ content }} }',
-                                                 "include_template_code" => '<img src="{{ filename }}.png" />' },
+                                                 "include_template_code" => '<img src="{{ filename }}.svg" />' },
                                                "a b c d e") }
     let(:subject) { described_class.new(site, code_tag) }
     let(:target_hash) { "bfcae429ec31cea750c3ab8167526c7c" }
-    let(:target_include) { '<img src="bfcae429ec31cea750c3ab8167526c7c.png" />' }
-    let(:target_path) { "#{source_dir}/lilypond_files/bfcae429ec31cea750c3ab8167526c7c.png" }
+    let(:target_include) { '<img src="bfcae429ec31cea750c3ab8167526c7c.svg" />' }
+    let(:target_path) { "#{source_dir}/lilypond_files/bfcae429ec31cea750c3ab8167526c7c.svg" }
 
     it "Generates the correct hash from a real tag with explicit code" do
       expect(subject.hash).to eq(target_hash)
     end
-    it "Produces a PNG file at the expected location in the source tree" do
+    it "Produces an SVG file at the expected location in the source tree" do
       subject.run!
       expect(File).to exist(target_path)
     end

@@ -61,7 +61,7 @@ layout: vacuous_html
 ---
 Test test test
 {% lilypond source_template_code: "{ {{ content }} }", 
-            include_template_code: '<img src="{{ filename }}.png" />' %}
+            include_template_code: '<img src="{{ filename }}.svg" />' %}
 c d e f g a b c
 {% endlilypond %}
 Test test test
@@ -71,14 +71,14 @@ MD
     it "doesn't just emit the tag contents" do
       expect(File.read(@dest_page)).not_to include("c d e f g a b c")
     end
-    it "produces a PNG in the source tree" do
-      expect(File).to exist("#{@temp_dir}/lilypond_files/a5b1d61f70473f0247629a66cfc50e52.png")
+    it "produces a SVG in the source tree" do
+      expect(File).to exist("#{@temp_dir}/lilypond_files/a5b1d61f70473f0247629a66cfc50e52.svg")
     end
-    it "produces a PNG in the destination tree" do
-      expect(File).to exist("#{dest_dir}/lilypond_files/a5b1d61f70473f0247629a66cfc50e52.png")
+    it "produces a SVG in the destination tree" do
+      expect(File).to exist("#{dest_dir}/lilypond_files/a5b1d61f70473f0247629a66cfc50e52.svg")
     end
     it "produces an image element in the rendered page" do
-      expect(File.read(@dest_page)).to include('<img src="a5b1d61f70473f0247629a66cfc50e52.png" />')
+      expect(File.read(@dest_page)).to include('<img src="a5b1d61f70473f0247629a66cfc50e52.svg" />')
     end
   end
 
@@ -90,7 +90,7 @@ layout: vacuous_html
 ---
 Test test test
 {% lilypond source_template: "vacuous_ly", 
-            include_template_code: '<img src="{{ filename }}.png" />' %}
+            include_template_code: '<img src="{{ filename }}.svg" />' %}
 c d e f g a b c
 {% endlilypond %}
 Test test test
@@ -100,14 +100,14 @@ MD
     it "doesn't just emit the tag contents" do
       expect(File.read(@dest_page)).not_to include("c d e f g a b c")
     end
-    it "produces a PNG in the source tree" do
-      expect(File).to exist("#{@temp_dir}/lilypond_files/a5b1d61f70473f0247629a66cfc50e52.png")
+    it "produces a SVG in the source tree" do
+      expect(File).to exist("#{@temp_dir}/lilypond_files/a5b1d61f70473f0247629a66cfc50e52.svg")
     end
-    it "produces a PNG in the destination tree" do
-      expect(File).to exist("#{dest_dir}/lilypond_files/a5b1d61f70473f0247629a66cfc50e52.png")
+    it "produces a SVG in the destination tree" do
+      expect(File).to exist("#{dest_dir}/lilypond_files/a5b1d61f70473f0247629a66cfc50e52.svg")
     end
     it "produces an image element in the rendered page" do
-      expect(File.read(@dest_page)).to include('<img src="a5b1d61f70473f0247629a66cfc50e52.png" />')
+      expect(File.read(@dest_page)).to include('<img src="a5b1d61f70473f0247629a66cfc50e52.svg" />')
     end
   end
 end
