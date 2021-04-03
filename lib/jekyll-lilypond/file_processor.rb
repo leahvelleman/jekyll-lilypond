@@ -26,7 +26,7 @@ module Jekyll
 
       def compile
         unless File.exist?("#{filepath}.svg")
-          puts "Compiling Lilypond file."
+          puts "Compiling Lilypond file #{filepath}.ly."
           Kernel.system("lilypond", "-lERROR", 
                         "-dbackend=svg", 
                         "--output=#{filepath}", 
@@ -50,7 +50,7 @@ module Jekyll
       def make_mp3
         unless File.exist?("#{filepath}.mp3")
           if File.exist?("#{filepath}.midi")
-            puts "Generating mp3."
+            puts "Generating #{filepath}.mp3."
             Kernel.system("timidity", 
                           "#{filepath}.midi", 
                           "-Ow", 
