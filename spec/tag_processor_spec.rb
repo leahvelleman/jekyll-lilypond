@@ -66,14 +66,18 @@ RSpec.describe(Jekyll::Lilypond::TagProcessor) do
       expect_any_instance_of(Jekyll::Lilypond::FileProcessor).not_to receive(:trim_svg)
       subject.run!
     end
-
     it "calls trim_svg if the tag asks it to" do
-      trimmable_tag = double("Tag", template_names: { source: "NiftyTemplateName", include: nil},
-                            template_code: { source: nil, include: "{{ filename }} abcde" },
-                            attrs: { "trim" => "true" })
-      subject = described_class.new(site, trimmable_tag)
-      allow(subject).to receive(:source).and_return(source)
+      tag.attrs["trim"] = "true"
       expect_any_instance_of(Jekyll::Lilypond::FileProcessor).to receive(:trim_svg)
+      subject.run!
+    end
+    it "doesn't call make_mp3 by default" do
+      expect_any_instance_of(Jekyll::Lilypond::FileProcessor).not_to receive(:make_mp3)
+      subject.run!
+    end
+    it "calls make_mp3 if the tag asks it to" do
+      tag.attrs["mp3"] = "true"
+      expect_any_instance_of(Jekyll::Lilypond::FileProcessor).to receive(:make_mp3)
       subject.run!
     end
   end

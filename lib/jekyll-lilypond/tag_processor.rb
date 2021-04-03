@@ -38,10 +38,17 @@ module Jekyll
         fp.write
         fp.compile
         fp.trim_svg if @tag.attrs["trim"] == "true"
+        fp.make_mp3 if @tag.attrs["mp3"] == "true"
+
         @site.static_files << StaticFile.new(site, 
                                              site.source, 
                                              "lilypond_files", 
                                              "#{hash}.svg") 
+
+        @site.static_files << StaticFile.new(site, 
+                                             site.source, 
+                                             "lilypond_files", 
+                                             "#{hash}.mp3") if @tag.attrs["mp3"] == "true"
       end
     end
   end
