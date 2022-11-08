@@ -22,6 +22,7 @@ module Jekyll
 
       def include
         @tag.attrs.update("filename" => hash)
+        @tag.attrs.update("baseurl" => Jekyll.configuration({})['baseurl'])
         include_template_obj.render(@tag)
       end
 
