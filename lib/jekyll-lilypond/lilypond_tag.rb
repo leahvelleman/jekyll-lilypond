@@ -1,6 +1,8 @@
 module Jekyll
   module Lilypond
     class LilypondTag < Liquid::Block
+      @@baseurl = Jekyll.configuration({})['baseurl']
+
       def initialize(_, argtext, _)
         super
         @attributes = parse_attributes(argtext)
@@ -22,7 +24,7 @@ module Jekyll
         site =  context.registers[:site]
 
         tag = Tag.new(@attributes, content)
-        tp = TagProcessor.new(site, tag)
+        tp = TagProcessor.new(site, tag, @@baseurl)
         tp.run!
         tp.include
       end

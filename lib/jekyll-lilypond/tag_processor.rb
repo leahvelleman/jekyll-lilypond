@@ -3,9 +3,10 @@ module Jekyll
     class TagProcessor
       attr_accessor :site
 
-      def initialize(site, tag)
+      def initialize(site, tag, baseurl)
         @site = site
         @tag = tag
+        @baseurl = baseurl
       end
 
       def source
@@ -22,7 +23,7 @@ module Jekyll
 
       def include
         @tag.attrs.update("filename" => hash)
-        @tag.attrs.update("baseurl" => Jekyll.configuration({})['baseurl'])
+        @tag.attrs.update("baseurl" => @baseurl)
         include_template_obj.render(@tag)
       end
 
